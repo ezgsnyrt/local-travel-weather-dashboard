@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Departures.css';
-import { Table } from 'react-bootstrap';
+import { Button, Form, Pagination, Table } from 'react-bootstrap';
 
 // Define the types
 interface Station {
@@ -36,6 +36,9 @@ const Departures = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
+
+  // Suggestions for station names
+  const [suggestions, setSuggestions] = useState<Station[]>([]);
 
   // Fetch stations on component mount
   useEffect(() => {
@@ -79,9 +82,23 @@ const Departures = () => {
 
   // Handle station search input
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-    const station = stations.find((s) => s.label.toLowerCase() === event.target.value.toLowerCase());
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    const filteredStations = stations.filter((s) =>
+      s.label.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setSuggestions(filteredStations); // Update suggestions based on input
+    const station = stations.find((s) => s.label.toLowerCase() === value.toLowerCase());
     setSelectedStation(station || null);
+  };
+
+  // Select a station from the suggestion list
+  const handleSuggestionClick = (station: Station) => {
+    setSelectedStation(station);
+    setSearchTerm(station.label);
+    setSuggestions([]); // Clear suggestions after selection
   };
 
   // Type guard for TrainAnnouncement
@@ -208,78 +225,110 @@ const Departures = () => {
       setCurrentPage((prev) => prev - 1);
     }
   };
-  
+
   return (
+
+
     <div className="departureContainer">
-    {loading ? (
+      {loading ? (
         <p>Laddar stationer...</p>
-    ) : error ? (
-        <p>{error}</p>
-    ) : (
-        <input
-            type="text"
-            placeholder="Sök station..."
-            value={searchTerm}
-            onChange={handleSearchInput}
-            className="form-control mb-3"
-        />
-    )}
-    <button onClick={searchTrainsAndFerries} disabled={!selectedStation || queryLoading} className="btn btn-primary mb-3">
-        Sök
-    </button>
+      ) : (
+        <div>
+          {/* Search Input */}
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchInput}
+              placeholder="Search station..."
+              className="form-control"
+            />
+          </Form.Group>
 
-    <table className="table table-striped table-bordered table-hover table-responsive-xl custom-table">
-        <thead className="table-subtitles">
-            <tr>
-                <th>Från</th>
-                <th>Till</th>
-                <th>Spår</th>
-                <th>Tid</th>
-                <th>Typ av trafik</th>
-            </tr>
-        </thead>
-        <tbody>
-            {currentAnnouncements.length === 0 ? (
-                <tr>
-                    <td colSpan={5}>Inga avgångar hittades</td>
+          {/* Dropdown Suggestions */}
+          {suggestions.length > 0 && (
+            <ul className="list-group mb-3">
+              {suggestions.slice(0, 4).map((suggestion) => (
+                <li
+                  key={suggestion.value}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="list-group-item list-group-item-action"
+                >
+                  {suggestion.label}
+                </li>
+              ))}
+
+            </ul>
+          )}
+
+          {/* Search Button */}
+          <Button
+            variant="primary"
+            onClick={searchTrainsAndFerries}
+            disabled={!selectedStation}
+            className="mb-3"
+          >
+            Search departures
+          </Button>
+
+          {/* Loading and Error Handling */}
+          {queryLoading && <p>Loading departures</p>}
+          {error && <p className="text-danger">{error}</p>}
+
+          {/* Train and Ferry Announcements Table */}
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>To</th>
+                <th>From</th>
+                <th>Platform</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentAnnouncements.map((announcement, index) => (
+                <tr key={index}>
+                  {isTrainAnnouncement(announcement) ? (
+                    <>
+                      <td>{formatTime(announcement.AdvertisedTimeAtLocation)}</td>
+                      <td>{mapLocationLabels(announcement.ToLocation)}</td>
+                      <td>{mapLocationLabels(announcement.FromLocation)}</td>
+                      <td>{announcement.TrackAtLocation}</td>
+                    </>
+                  ) : (
+                    <>
+                      <td>{announcement.DepartureTime}</td>
+                      <td>{mapLocationLabels(announcement.ToLocation)}</td>
+                      <td>{announcement.FromHarbor}</td>
+                      <td>{announcement.TypeOfTraffic}</td>
+                    </>
+                  )}
                 </tr>
-            ) : (
-                currentAnnouncements.map((announcement, index) => (
-                    <tr key={index}>
-                        {isTrainAnnouncement(announcement) ? (
-                            <>
-                                <td>{mapLocationLabels(announcement.FromLocation)}</td>
-                                <td>{mapLocationLabels(announcement.ToLocation)}</td>
-                                <td>{announcement.TrackAtLocation}</td>
-                                <td>{formatTime(announcement.AdvertisedTimeAtLocation)}</td>
-                                <td>{announcement.TypeOfTraffic || "N/A"}</td>
-                            </>
-                        ) : (
-                            <>
-                                <td>{announcement.FromHarbor}</td>
-                                <td>{mapLocationLabels(announcement.ToLocation)}</td>
-                                <td>N/A</td>
-                                <td>{formatTime(announcement.DepartureTime)}</td>
-                                <td>{announcement.TypeOfTraffic}</td>
-                            </>
-                        )}
-                    </tr>
-                ))
-            )}
-        </tbody>
-    </table>
+              ))}
+            </tbody>
+          </Table>
 
-    <div className="pagination-container">
-        <button onClick={() => handlePageChange("prev")} disabled={currentPage === 1} className="btn btn-secondary me-2">
-            Föregående
-        </button>
-        <span>{`Sida ${currentPage} av ${totalPages}`}</span>
-        <button onClick={() => handlePageChange("next")} disabled={currentPage === totalPages} className="btn btn-secondary ms-2">
-            Nästa
-        </button>
+          {/* Pagination */}
+          <Pagination className="justify-content-center">
+            <Pagination.Prev
+              onClick={() => handlePageChange("prev")}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Pagination.Prev>
+            <Pagination.Item active>{`Page ${currentPage} of ${totalPages}`}</Pagination.Item>
+            <Pagination.Next
+              onClick={() => handlePageChange("next")}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Pagination.Next>
+          </Pagination>
+        </div>
+      )}
     </div>
-</div>
   )
-}
+
+};
 
 export default Departures;
