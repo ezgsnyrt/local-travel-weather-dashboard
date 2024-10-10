@@ -1,24 +1,33 @@
 import React from 'react';
 import './Dashboard.css';
 
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import logo_icon from '../../assets/road.png'; // https://www.flaticon.com/free-icon/road_712058
 import UserInput from '../UserInput/UserInput';
-import Departures from '../Departures/Departures';
 import TrafficUpdates from '../TrafficUpdates/TrafficUpdates';
-import {WeatherDisplay} from '../Weather/WeatherDisplay';
+import DeparturesAndWeather from '../DeparturesAndWeather/DeparturesAndWeather';
 
 
 const Dashboard = () => {
-  const solnaCoordinates = {
-    lat: 59.3600,
-    lon: 18.0000,
-  };
+
   return (
-    <div>Dashboard
-        <UserInput/>
-        <Departures/>
-        <WeatherDisplay coordinates={solnaCoordinates} />
-        <TrafficUpdates/>
-    </div>
+
+    <>
+      <Navbar expand="lg">
+        <Container>
+          <Navbar.Brand href="#home">
+            <img src={logo_icon} className="logo-icon me-1 mb-2"/>
+            <span className="logo-name">StadTrafik</span>
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
+
+      <UserInput />
+      <DeparturesAndWeather/>
+     
+      <TrafficUpdates />
+    </>
   )
 }
 

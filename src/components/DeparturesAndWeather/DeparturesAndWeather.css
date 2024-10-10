@@ -1,0 +1,38 @@
+#departure-weather-section {
+    min-height: 40vh;
+    display: flex;
+    justify-content: space-between;
+    align-items:flex-start;
+    background-color: #FFFFFF;
+}
+
+
+@media (min-width: 320px) and (max-width: 576px) {
+    #departure-weather-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .departures-wrapper {
+        width: 100%;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    #departure-weather-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .departures-wrapper {
+        width: 100%;
+    }
+}
+
+/* @media (min-width: 577px) and (max-width: 768px) {}
+
+@media (min-width: 769px) and (max-width: 1024px) {} */
