@@ -4,7 +4,7 @@ import './Dashboard.css';
 import UserInput from '../UserInput/UserInput';
 import Departures from '../Departures/Departures';
 import TrafficUpdates from '../TrafficUpdates/TrafficUpdates';
-import WeatherDisplay from '../Weather/WeatherDisplay';
+import {WeatherDisplay} from '../Weather/WeatherDisplay';
 
 
 const Dashboard = () => {
