@@ -1,6 +1,6 @@
 import React from 'react';
 import './Dashboard.css';
-import Weather from '../Weather/Weather';
+import Weather from '../Weather/WeatherDisplay.tsx';
 import UserInput from '../UserInput/UserInput';
 import Departures from '../Departures/Departures';
 import TrafficUpdates from '../TrafficUpdates/TrafficUpdates';
