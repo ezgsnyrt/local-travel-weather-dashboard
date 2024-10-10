@@ -1,0 +1,39 @@
+#user-input-section {
+    min-height: 35vh;
+    background-color: #2d3142;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-wrapper {
+    min-height: 25vh;
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 0.2rem;
+    background-color: #FFFFFF;
+}
+
+.input-group {
+    width: 90%;
+}
+
+
+@media (min-width: 320px) and (max-width: 576px) {
+
+    #user-input-section {
+        min-height: 20vh;
+    }
+    .input-wrapper {
+        width: 100%;
+        min-height: 15vh;
+        background-color: #FFFFFF;
+    }
+}
+
+/* @media (min-width: 577px) and (max-width: 768px) {}
+
+@media (min-width: 769px) and (max-width: 1024px) {} */

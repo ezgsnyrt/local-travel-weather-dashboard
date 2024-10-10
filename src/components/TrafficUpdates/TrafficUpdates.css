@@ -1,0 +1,52 @@
+#traffic-updates-section {
+    min-height: 35vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.traffic-updates-wrapper {
+    background-color: #2D303F;
+    border: 2px solid black;
+}
+
+.traffic-updates-inner-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.traffic-updates-info {
+    width: 60%;
+    text-align: justify;
+    padding: 1% 2%;
+}
+
+.traffic-updates-map {
+    width: 35%;
+    padding: 1% 2%;
+    text-align: start;
+}
+
+
+@media (min-width: 320px) and (max-width: 576px) {
+    #traffic-updates-section {
+        min-height: 50vh;
+    }
+
+    .traffic-updates-inner-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .traffic-updates-info,
+    .traffic-updates-map {
+        width: 100%;
+        padding: 5%;
+    }
+}
+
+/* @media (min-width: 577px) and (max-width: 768px) {}
+
+@media (min-width: 769px) and (max-width: 1024px) {}  */
