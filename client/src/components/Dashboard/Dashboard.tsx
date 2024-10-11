@@ -1,18 +1,17 @@
 import React from 'react';
 import './Dashboard.css';
-
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import logo_icon from '../../assets/road.png'; // https://www.flaticon.com/free-icon/road_712058
 import UserInput from '../UserInput/UserInput';
-import TrafficUpdates from '../TrafficUpdates/TrafficUpdates';
+import TrafficAndHotel from '../TrafficAndHotel/TrafficAndHotel';
 import DeparturesAndWeather from '../DeparturesAndWeather/DeparturesAndWeather';
 
 
+
+
 const Dashboard = () => {
-
   return (
-
     <>
       <Navbar expand="lg">
         <Container>
@@ -22,11 +21,9 @@ const Dashboard = () => {
           </Navbar.Brand>
         </Container>
       </Navbar>
-
       <UserInput />
-      <DeparturesAndWeather/>
-     
-      <TrafficUpdates />
+      <DeparturesAndWeather />
+      <TrafficAndHotel />
     </>
   )
 }
