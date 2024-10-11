@@ -280,9 +280,10 @@ const Departures = () => {
             <thead>
               <tr>
                 <th>Time</th>
-                <th>To</th>
                 <th>From</th>
+                <th>To</th>
                 <th>Platform</th>
+                <th>Type</th>
               </tr>
             </thead>
             <tbody>
@@ -291,9 +292,10 @@ const Departures = () => {
                   {isTrainAnnouncement(announcement) ? (
                     <>
                       <td>{formatTime(announcement.AdvertisedTimeAtLocation)}</td>
-                      <td>{mapLocationLabels(announcement.ToLocation)}</td>
                       <td>{mapLocationLabels(announcement.FromLocation)}</td>
+                      <td>{mapLocationLabels(announcement.ToLocation)}</td>
                       <td>{announcement.TrackAtLocation}</td>
+                      <td>{announcement.TypeOfTraffic}</td>
                     </>
                   ) : (
                     <>
