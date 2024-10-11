@@ -1,4 +1,3 @@
-/** navbar styling starts here **/
 .navbar {
     background-color: #FFFFFF;
 }
@@ -19,6 +18,16 @@
     color: #284b63;
 }
 
+h4 {
+    font-size: 1.3rem;
+    color: #D4A14B;
+    font-weight: 700;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
 
 
 /* @media (min-width: 320px) and (max-width: 576px) {}

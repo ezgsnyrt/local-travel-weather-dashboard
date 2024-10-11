@@ -1,0 +1,27 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "main.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && nodemon dist/main.js",
+    "dev": "nodemon - exec"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.5",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "-": "^0.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "save-dev": "^0.0.1-security",
+    "ts-node": "^10.9.2"
+  }
+}
