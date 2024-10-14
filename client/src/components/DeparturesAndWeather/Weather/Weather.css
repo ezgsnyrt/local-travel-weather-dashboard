@@ -4,6 +4,7 @@
 
 .weather-wrapper {
     border: 2px solid black;
+    border-radius: 6px;
 }
 
 
@@ -20,3 +21,46 @@
         margin-left: 3%;
     }
 }
+.weather-container {
+    max-width: 600px; 
+    margin: auto; 
+    padding: 20px;
+    background-color: #dedbdb; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+  }
+  
+  .weather-table {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    width: 100%;
+    border: 1px solid #ddd; 
+  }
+  
+  .weather-header {
+    font-weight: bold;
+    background-color: #f0f0f0;
+  }
+  
+  .grid-row {
+    display: contents; 
+  }
+  
+  .grid-item {
+    padding: 10px; 
+    text-align: center;
+    border: 1px solid #ddd; 
+    font-size: 1rem; 
+  }
+  
+  .weather-icon img {
+    width: 24px; 
+    height: auto; 
+  }
+  
+  .header {
+    background-color: #eaeaea; 
+    font-weight: bold;
+  }
+  
+  
