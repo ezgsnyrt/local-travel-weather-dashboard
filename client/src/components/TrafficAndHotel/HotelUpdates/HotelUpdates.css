@@ -1,0 +1,22 @@
+.hotel-container {
+    width: 45%;
+    background-color: #FFFFFF;
+    padding: 2%;
+}
+
+.inner-wrapper {
+    text-align: justify;
+}
+
+
+@media (min-width: 320px) and (max-width: 576px) {
+    .hotel-container {
+        width: 100%;
+        margin: 5% 0;
+        padding: 3% 4%;
+    }
+}
+
+/* @media (min-width: 577px) and (max-width: 768px) {}
+
+@media (min-width: 769px) and (max-width: 1024px) {}  */
