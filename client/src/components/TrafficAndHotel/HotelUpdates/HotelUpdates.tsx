@@ -30,29 +30,34 @@ const HotelUpdates: React.FC = () => {
             }),
           }
         );
-        console.log(response);
+        // console.log(response);
         if (!response.ok) {
           throw new Error('Failed to fetch access token');
         }
         const data = await response.json();
         const accessToken = data.access_token;
+        //  console.log(accessToken);
 
+        //* Fetch hotels using the access token
         const hotelResponse = await fetch(
-          'https://test.api.amadeus.com/v2/shopping/hotel-offers' +
-            {
-              method: 'GET',
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
+          `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=5&radiusUnit=KM&hotelSource=ALL`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
         );
+        //console.log(hotelResponse);
         if (!hotelResponse.ok) {
           throw new Error('Failed yo fetch hotels');
         }
         const hotelDate = await hotelResponse.json();
-        const fetchedHotels = hotelDate.map((hotel: any) => ({
-          name: hotel.hotel.name,
-          address: hotel.hotel.address.lines.join(', '),
+        console.log('hotelData:', hotelDate);
+        const fetchedHotels = hotelDate.data.slice(0, 3).map((hotel: any) => ({
+          name: hotel.name,
+          address: hotel.address.countryCode,
         }));
         setHotels(fetchedHotels);
         setLoadings(false);
@@ -63,7 +68,7 @@ const HotelUpdates: React.FC = () => {
       }
     };
     fetchHotels();
-  }, [latitude, longitude]);
+  }, []);
 
   return (
     <div className='hotel-container'>
