@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import cors from 'cors';
+import cors from "cors";
 
 const PORT = 3005;
 const app = express();
@@ -26,6 +26,23 @@ app.get("/weather", (request: Request, response: Response) => {
         response.status(200).send(json);
     })();
 });
+
+app.get('/weather', async (req, res) => {
+  const lat = '35.6895'; 
+  const lon = '139.6917'; 
+  const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data.list.slice(0, 5));  
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching weather data' });
+  }
+});
+
+
+
 
 
 app.listen(PORT, () => {
