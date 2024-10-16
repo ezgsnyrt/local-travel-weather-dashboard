@@ -1,33 +1,24 @@
 import express, { Request, Response } from "express";
-import cors from "cors";
+import cors from 'cors';
+import { Router } from 'express';
+import 'dotenv/config';
+import { getCoordinates, predictAddress } from "./controllers/address.controller";
 
 const PORT = 3005;
 const app = express();
 const corsOptions = {
-    origin: ["http://localhost:3005"],
+    origin: ["http://localhost:3001"], // Front-end local host
 };
 
 app.use(cors(corsOptions));
 
 
-// An example API request with root endpoint
-app.get("/", (request: Request, response: Response) => {
-  response.status(200).send("Hello World");
-});
-
-
-// An example API request with endpoint
-// Link, endpoint, request parameter will be changed for the purpose.
-app.get("/weather", (request: Request, response: Response) => {
-    (async () => {
-        const res = await fetch('https://api.nextbike.net/maps/gbfs/v1/nextbike_se/gbfs.json');
-        const json = await res.json();
-        console.log(json);
-        response.status(200).send(json);
-    })();
-});
+// You can put the endpoints and request handlers here
+app.get("/coordinates", getCoordinates);
+app.get("/autocomplete", predictAddress);
 
 app.get('/weather', async (req, res) => {
+  const apiKey = 'f40f4543214ad55ead8d6ca12cb39ee0';
   const lat = '35.6895'; 
   const lon = '139.6917'; 
   const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
@@ -51,42 +42,3 @@ app.listen(PORT, () => {
   // gracefully handle error
   throw new Error(error.message);
 });
-
-
-
-
-
-
-
-
-// import express, { Request, Response } from "express";
-
-// const app = express();
-
-// const PORT = 3005;
-
-// app.get("/", (request: Request, response: Response) => {
-//   response.status(200).send("Hello World");
-// });
-
-
-
-// // An example API request
-// // Link, endpoint, request parameter will be changed for the purpose.
-// app.get("/weather", (request: Request, response: Response) => {
-//     (async () => {
-//         const res = await fetch('https://api.nextbike.net/maps/gbfs/v1/nextbike_se/gbfs.json');
-//         const json = await res.json();
-//         console.log(json);
-//         response.status(200).send(json);
-//     })();
-// });
-
-
-
-// app.listen(PORT, () => {
-//   console.log("Server running at PORT: ", PORT);
-// }).on("error", (error) => {
-//   // gracefully handle error
-//   throw new Error(error.message);
-// });
