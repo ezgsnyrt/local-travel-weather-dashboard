@@ -26,19 +26,19 @@ interface WeatherDisplayProps {
   };
  }
 
-const getSevenDays = (data: ApiResponse): WeatherData[] => {
-  const today = new Date();
-  const days = Array.from({ length: 5}, (_, i) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
-    return date.toDateString();
-  });
+// const getSevenDays = (data: ApiResponse): WeatherData[] => {
+//   const today = new Date();
+//   const days = Array.from({ length: 5}, (_, i) => {
+//     const date = new Date(today);
+//     date.setDate(today.getDate() + i);
+//     return date.toDateString();
+//   });
 
-  return data.list?.filter((d) => {
-    const date = new Date(d.dt * 1000);
-    return days.includes(date.toDateString());
-  }).slice(0, 5) || []; 
-};
+//   return data.list?.filter((d) => {
+//     const date = new Date(d.dt * 1000);
+//     return days.includes(date.toDateString());
+//   }).slice(0, 5) || []; 
+// };
 
 
 export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates }) => {
@@ -47,7 +47,7 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates })
 
  
   const fetchWeatherData = async () => {
-    const apiKey = 'f40f4543214ad55ead8d6ca12cb39ee0'; 
+    // const apiKey = 'f40f4543214ad55ead8d6ca12cb39ee0'; 
     const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&units=metric&appid=${apiKey}`;
 
     try {
@@ -55,11 +55,8 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates })
       if (!response.ok) {
         throw new Error('Error fetching weather data');
       }
-      const data: ApiResponse = await response.json();
-      const sevenDayForecast = getSevenDays(data);
-      setWeatherData(sevenDayForecast);
-
-    
+      const data: WeatherData[] = await response.json();
+      setWeatherData(data); 
     } catch (error) {
       setError('Unable to fetch weather data');
       console.error('API call error:', error);
