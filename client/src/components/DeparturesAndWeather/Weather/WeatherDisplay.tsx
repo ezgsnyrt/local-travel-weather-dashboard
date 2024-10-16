@@ -47,7 +47,7 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates })
 
  
   const fetchWeatherData = async () => {
-    // const apiKey = 'f40f4543214ad55ead8d6ca12cb39ee0'; 
+     const apiKey = 'f40f4543214ad55ead8d6ca12cb39ee0'; 
     const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&units=metric&appid=${apiKey}`;
 
     try {
