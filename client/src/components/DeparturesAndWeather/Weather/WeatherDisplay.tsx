@@ -2,55 +2,42 @@ import React, { useState, useEffect } from 'react';
 import './Weather.css';
 import axios from 'axios';
 
-// interface WeatherData {
-//   dt: number;
-//   main: {
-//     temp: number;
-  
-//   };
-//   weather: {
-//     description: string;
-//     icon: string;
-//   }[];
-//   rain?: {
-//     '1h'?: number;
-// };
-// }
+
 
 
 interface WeatherData {
-  dt: number; // Unix timestamp
+  dt: number; 
   main: {
-    temp: number; // Temperature in Kelvin
-    feels_like: number; // Feels like temperature in Kelvin
-    temp_min: number; // Minimum temperature in Kelvin
-    temp_max: number; // Maximum temperature in Kelvin
-    pressure: number; // Pressure in hPa
-    sea_level: number; // Sea level pressure in hPa
-    grnd_level: number; // Ground level pressure in hPa
-    humidity: number; // Humidity in percent
-    temp_kf: number; // Temperature variation in Kelvin
+    temp: number; 
+    feels_like: number; 
+    temp_min: number; 
+    temp_max: number; 
+    pressure: number; 
+    sea_level: number;
+    grnd_level: number; 
+    humidity: number; 
+    temp_kf: number; 
   };
   weather: {
-    id: number; // Weather condition ID
-    main: string; // Group of weather conditions (e.g., "Clear", "Clouds", "Rain")
-    description: string; // Weather condition description
-    icon: string; // Weather icon code
+    id: number;
+    main: string; 
+    description: string; 
+    icon: string;
   }[];
   clouds: {
-    all: number; // Cloudiness in percent
+    all: number; 
   };
   wind: {
-    speed: number; // Wind speed in meters per second
-    deg: number; // Wind direction in degrees (meteorological)
-    gust: number; // Wind gust speed in meters per second
+    speed: number; 
+    deg: number;
+    gust: number; 
   };
-  visibility: number; // Visibility in meters
-  pop: number; // Probability of precipitation in percent
+  visibility: number; 
+  pop: number; 
   sys: {
-    pod: string; // Period of day (day or night)
+    pod: string; 
   };
-  dt_txt: string; // Forecast time in ISO 8601 format
+  dt_txt: string; 
 }
 interface ApiResponse {
   list?: WeatherData[];
@@ -80,7 +67,7 @@ const getSevenDays = (data: ApiResponse): WeatherData[] => {
 
 axios.defaults.baseURL = 'http://localhost:3005';
 export const fetchWeatherData = async () => {
-  const coordinates = { lat: 59.334591, lon: 18.063278 }; // Coordinates for Solna
+  const coordinates = { lat: 59.334591, lon: 18.063278 };
   try {
     const response = await axios.get('/weatherforecast', { params: coordinates });
     return response.data;
@@ -97,7 +84,7 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates })
   const handleFetchWeather = async () => {
     try {
       const response = await fetchWeatherData();
-      const filteredData = getSevenDays(response); // Filter and slice data
+      const filteredData = getSevenDays(response); 
       setWeatherData(filteredData);
     } catch (error) {
       setError('Error al obtener datos del clima desde el servidor');
