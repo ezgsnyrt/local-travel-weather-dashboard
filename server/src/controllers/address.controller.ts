@@ -2,7 +2,7 @@ import express, { RequestHandler, Request, Response } from "express";
 import axios from "axios";
 
 async function getCoordsForAddress(address:string) {
-    const response = await axios.get(
+    const response = await axios.get(  
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
         address
         )}&key=${process.env.API_KEY}`

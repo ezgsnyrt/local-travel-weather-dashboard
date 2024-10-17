@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
 const address_controller_1 = require("./controllers/address.controller");
+const weather_controller_1 = require("./controllers/weather.controller");
 const PORT = 3005;
 const app = (0, express_1.default)();
 const corsOptions = {
@@ -16,6 +17,16 @@ app.use((0, cors_1.default)(corsOptions));
 // You can put the endpoints and request handlers here
 app.get("/coordinates", address_controller_1.getCoordinates);
 app.get("/autocomplete", address_controller_1.predictAddress);
+app.get('/weatherforecast', (req, res) => {
+    const coordinates = { lat: 59.334591, lon: 18.063278 }; // Coordinates for Solna
+    (0, weather_controller_1.fetchWeatherData)(coordinates)
+        .then(data => {
+        res.json(data);
+    })
+        .catch(error => {
+        res.status(500).json({ error: 'Failed to fetch weather data' });
+    });
+});
 app.listen(PORT, () => {
     console.log("Server running at PORT: ", PORT);
 }).on("error", (error) => {
