@@ -4,6 +4,7 @@ interface Hotel {
   name: string;
   address: string;
 }
+
 const HotelUpdates: React.FC = () => {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loadings, setLoadings] = useState(true);
@@ -25,11 +26,12 @@ const HotelUpdates: React.FC = () => {
             },
             body: new URLSearchParams({
               grant_type: 'client_credentials',
-              client_id: '9JvgqFBLr17QfZJH5wbhvhOB8yi67ogI',
-              client_secret: 'SHQKAocGSc7MjYca',
+              client_id: `${process.env.REACT_APP_AMADEUS_API_KEY}`,
+              client_secret: `${process.env.REACT_APP_AMADEUS_API_SECRET}`,
             }),
           }
         );
+
         // console.log(response);
         if (!response.ok) {
           throw new Error('Failed to fetch access token');
@@ -57,7 +59,6 @@ const HotelUpdates: React.FC = () => {
         console.log('hotelData:', hotelDate);
         const fetchedHotels = hotelDate.data.slice(0, 3).map((hotel: any) => ({
           name: hotel.name,
-          address: hotel.address.countryCode,
         }));
         setHotels(fetchedHotels);
         setLoadings(false);
@@ -83,8 +84,6 @@ const HotelUpdates: React.FC = () => {
             {hotels.map((hotel, index) => (
               <li key={index}>
                 <strong>{hotel.name}</strong>
-                <br />
-                <strong>{hotel.address}</strong>
               </li>
             ))}
           </ul>
