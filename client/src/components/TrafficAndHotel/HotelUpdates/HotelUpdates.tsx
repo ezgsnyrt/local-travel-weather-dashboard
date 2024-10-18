@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './HotelUpdates.css';
 interface Hotel {
   name: string;
-  address: string;
+  imgUrl: string;
+  website: string;
 }
 
 const HotelUpdates: React.FC = () => {
@@ -17,50 +18,42 @@ const HotelUpdates: React.FC = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const response = await fetch(
-          'https://test.api.amadeus.com/v1/security/oauth2/token',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-              grant_type: 'client_credentials',
-              client_id: `${process.env.REACT_APP_AMADEUS_API_KEY}`,
-              client_secret: `${process.env.REACT_APP_AMADEUS_API_SECRET}`,
-            }),
-          }
+        const hotelsResponse = await fetch(
+          `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=lodging&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+        );
+        if (!hotelsResponse.ok) {
+          throw new Error('Failed to fetch hotels form google place api');
+        }
+        const hotelDate = await hotelsResponse.json();
+        const hotels = hotelDate.results.slice(0, 3);
+
+        //* Here adding Google Place API to show images and websites
+        //*Since I need only a few hotel results, I can use promise.all
+        const hotelDetails = await Promise.all(
+          hotels.map(async (hotel: any) => {
+            const placeDetails = await fetch(
+              `https://maps.googleapis.com/maps/api/place/details/json?place_id=${hotel.place_id}&fields=name,website,photos&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+            );
+            if (!placeDetails.ok) {
+              throw new Error('Error');
+            }
+            const placeData = await placeDetails.json();
+            const result = placeData.result;
+            console.log(placeData);
+            console.log(result);
+            const imgUrl = result.photos
+              ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${result.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+              : '';
+            const website = result.website || 'No website available';
+            return {
+              name: result.name,
+              imgUrl: imgUrl,
+              website: website,
+            };
+          })
         );
 
-        // console.log(response);
-        if (!response.ok) {
-          throw new Error('Failed to fetch access token');
-        }
-        const data = await response.json();
-        const accessToken = data.access_token;
-        //  console.log(accessToken);
-
-        //* Fetch hotels using the access token
-        const hotelResponse = await fetch(
-          `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=5&radiusUnit=KM&hotelSource=ALL`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        //console.log(hotelResponse);
-        if (!hotelResponse.ok) {
-          throw new Error('Failed yo fetch hotels');
-        }
-        const hotelDate = await hotelResponse.json();
-        console.log('hotelData:', hotelDate);
-        const fetchedHotels = hotelDate.data.slice(0, 3).map((hotel: any) => ({
-          name: hotel.name,
-        }));
-        setHotels(fetchedHotels);
+        setHotels(hotelDetails);
         setLoadings(false);
       } catch (error) {
         console.error(error);
@@ -84,6 +77,10 @@ const HotelUpdates: React.FC = () => {
             {hotels.map((hotel, index) => (
               <li key={index}>
                 <strong>{hotel.name}</strong>
+                {hotel.imgUrl && <img src={hotel.imgUrl} alt={hotel.name} />}
+                <a href={hotel.website} target='_blank' rel='noreferrer'>
+                  Visit Website
+                </a>
               </li>
             ))}
           </ul>
