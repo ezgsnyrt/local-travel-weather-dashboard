@@ -66,8 +66,8 @@ const getSevenDays = (data: ApiResponse): WeatherData[] => {
 };
 
 axios.defaults.baseURL = 'http://localhost:3005';
-export const fetchWeatherData = async () => {
-  const coordinates = { lat: 59.334591, lon: 18.063278 };
+export const fetchWeatherData = async (latitude:number, longitude:number) => {
+  const coordinates = { lat: latitude, lon: longitude };
   try {
     const response = await axios.get('/weatherforecast', { params: coordinates });
     return response.data;
@@ -76,28 +76,40 @@ export const fetchWeatherData = async () => {
   }
 };
 
-export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates }) => {
+export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = () => {
 
   const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
   const [error, setError] = useState<string | null>(null);
-
-  const handleFetchWeather = async () => {
-    try {
-      const response = await fetchWeatherData();
-      const filteredData = getSevenDays(response); 
-      setWeatherData(filteredData);
-    } catch (error) {
-      setError('Error al obtener datos del clima desde el servidor');
+  useEffect(() => {
+  const handleGeolocation = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          const latitude = position.coords.latitude;   
+          console.log(latitude)
+          const longitude = position.coords.longitude;   
+          console.log(longitude)
+          fetchWeatherData(latitude, longitude)
+          .then((data) => {
+            
+            const filteredData = getSevenDays(data);
+            setWeatherData(filteredData);
+          })
+          
+            .catch((error) => setError(error.message));
+        },
+        (error: GeolocationPositionError) => setError('Geolocation is not supported by this browser.'),
+        { enableHighAccuracy: true }
+      );
+    } else {
+      setError('Geolocation is not supported by this browser.');
     }
   };
 
-
+  handleGeolocation();
+}, []);
 
   
-    useEffect(() => {
-      handleFetchWeather();
-  }, [coordinates]); 
-
   if (error) {
     return <div>{error}</div>;
   }
@@ -114,10 +126,7 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates })
 
 return (
   <div className="weather-container">
-    <h2>LOCAL WEATHER</h2>
-
     <div className="weather-table">
-    
       <div className="weather-header grid-row">
         <div className="grid-item header">DAY</div>
         <div className="grid-item header">TEMP °C</div>
@@ -133,7 +142,7 @@ return (
           weekday: 'long',
         });
         const temperature = data.main.temp.toFixed(1);
-       // const rain = data.rain? && data.rain?['1h'] ? data.rain['1h'] : 0;
+      const rain = data.main.humidity;// && data.main.humidity?['1h'] ;//? data.main.humidity?['1h'] : 0;
         const description = data.weather[0].description;
         const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
 
@@ -141,7 +150,7 @@ return (
           <div key={data.dt} className="weather-row grid-row">
             <div className="grid-item">{formattedDate}</div>
             <div className="grid-item">{temperature} °C</div>
-          {/* <div className="grid-item">{rain} %</div> */}
+           <div className="grid-item">{rain} %</div> 
             <div className="grid-item weather-icon">
               <img src={iconUrl} alt={description} />
             </div>
