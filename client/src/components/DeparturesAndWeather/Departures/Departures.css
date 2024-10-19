@@ -1,7 +1,23 @@
 .departures-wrapper {
-    width: 57%;
+    width: 100%;
+    border: 2px solid black;
 }
 
-.departures-wrapper {
-    border: 2px solid black;
+.search-container {
+    position: relative; 
+
+
+}
+
+.search-container .suggestions-dropdown .list-group{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    max-height: 200px;
+    overflow-y: auto;
 }
