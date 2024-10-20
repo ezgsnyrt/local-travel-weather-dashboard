@@ -9,7 +9,6 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
@@ -24,5 +23,7 @@
     "express": "^4.21.1",
     "save-dev": "^0.0.1-security",
     "ts-node": "^10.9.2"
-  }
+  },
+  "keywords": [],
+  "description": ""
 }

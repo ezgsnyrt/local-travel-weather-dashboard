@@ -1,0 +1,12 @@
+{
+  "name": "local-travel-weather-dashboard",
+  "version": "1.0.0",
+  "description": "Before running the project, you'll need to install the required dependencies. Follow these steps;",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

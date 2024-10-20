@@ -1,48 +1,47 @@
 .traffic-container {
-    width: 55%;
-    background-color: #FFFFFF;
-    padding: 2%;
+  width: 55%;
+  background-color: #ffffff;
+  padding: 2%;
 }
 
 .traffic-updates-wrapper {
-    width: 100%;
-    text-align: justify;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  width: 100%;
+  text-align: justify;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .traffic-updates-info {
-    width: 55%;
-    text-align: justify;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  width: 30%;
+  text-align: justify;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .traffic-updates-map {
-    width: 45%;
-    padding: 5%;
-    text-align: start;
+  width: 70%;
+  padding: 5%;
+  text-align: start;
 }
 
-
 @media (min-width: 320px) and (max-width: 576px) {
-    .traffic-container {
-        width: 100%;
-        margin: 5% 0;
-    }
+  .traffic-container {
+    width: 100%;
+    margin: 5% 0;
+  }
 
-    .traffic-updates-wrapper {
-        display: flex;
-        flex-direction: column;
-    }
+  .traffic-updates-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .traffic-updates-info,
-    .traffic-updates-map {
-        width: 100%;
-        padding: 3%;
-    }
+  .traffic-updates-info,
+  .traffic-updates-map {
+    width: 100%;
+    padding: 3%;
+  }
 }
 
 /* @media (min-width: 577px) and (max-width: 768px) {}
