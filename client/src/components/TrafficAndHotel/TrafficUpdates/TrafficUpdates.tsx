@@ -1,18 +1,33 @@
-import React, { useEffect, useState } from "react";
-import "./TrafficUpdates.css";
-import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import "./TrafficUpdates.css";
 
 const TrafficUpdates = () => {
   type Position = [number, number];
 
-  const positionArray: Position[] = [
-    [56.04587001491054, 12.697239762273881],
-    [56.14587001491054, 12.797239762273881],
-    [56.24587001491054, 12.897239762273881],
-  ];
+  const [positions, setPositions] = useState([]);
 
-  const [apiData, setApiData] = useState({});
+  interface Deviation {
+    RoadNumber: string;
+    AffectedDirection: string;
+    AffectedDirectionValue: string;
+  }
+
+  interface Situation {
+    ModifiedTime: string;
+    Deviation: Deviation[];
+  }
+
+  interface ApiResponse {
+    RESPONSE: {
+      RESULT: {
+        Situation: Situation[];
+      }[];
+    };
+  }
+
+  const [apiData, setApiData] = useState<ApiResponse | {}>({});
 
   const url = "https://api.trafikinfo.trafikverket.se/v2/data.json";
   const headers = {
@@ -32,8 +47,26 @@ const TrafficUpdates = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(url, data, { headers });
-        // console.log("Api response", response.data);
+
         setApiData(response.data);
+
+        const situations =
+          (response.data as ApiResponse)?.RESPONSE?.RESULT?.[0]?.Situation ||
+          [];
+
+        const positionArray = situations.flatMap((situation) =>
+          situation.Deviation.map((deviation) => {
+            // "POINT (longitude latitude)" formatından verileri çıkartıyoruz
+            const pointString = deviation.Geometry.Point.WGS84;
+            const coordinates = pointString.match(/POINT \(([^ ]+) ([^ ]+)\)/);
+            const lon = parseFloat(coordinates[1]); // Longitude
+            const lat = parseFloat(coordinates[2]); // Latitude
+
+            return [lat, lon]; // [Latitude, Longitude] formatında döndür
+          })
+        );
+        console.log("positionArray", positionArray);
+        setPositions(positionArray);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -41,23 +74,11 @@ const TrafficUpdates = () => {
     fetchData();
   }, []);
 
-  //   const situation = apiData.RESPONSE.RESULT[0].Situation || [];
-  // console.log("situation", situation);
+  console.log("api data:", apiData);
 
-  // const processedDeviations = situation.map((item) => {
-  // if (item.Deviation) {
-  // return item.deviation.map((Deviation) => {
-  // return {
-  // AffectedDirection: Deviation.AffectedDirection,
-  // AffectedDirectionValue: Deviation.AffectedDirectionValue,
-  // };
-  // });
-  // }
-
-  // return [];
-  // });
-
-  //  console.log("processedDeviations", processedDeviations);
+  const onClickMarker = (index) => {
+    console.log(" index clicked", index);
+  };
 
   return (
     <div className="traffic-container">
@@ -69,8 +90,12 @@ const TrafficUpdates = () => {
         <div className="traffic-updates-map ">
           <MapContainer
             style={{ height: "40vh" }}
-            center={[56.04587001491054, 12.697239762273881]}
-            zoom={15}
+            center={
+              positions.length
+                ? positions[0]
+                : [56.04587001491054, 12.697239762273881]
+            }
+            zoom={5}
             maxZoom={30}
           >
             <TileLayer
@@ -78,8 +103,10 @@ const TrafficUpdates = () => {
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            {positionArray.map((pos, index) => (
-              <Marker key={index} position={pos} />
+            {positions.map((pos, index) => (
+              <div key={index} onClick={() => onClickMarker(index)}>
+                <Marker position={pos} />
+              </div>
             ))}
           </MapContainer>
         </div>
