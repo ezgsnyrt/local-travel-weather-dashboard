@@ -76,7 +76,7 @@ export const fetchWeatherData = async (latitude:number, longitude:number) => {
   }
 };
 
-export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = () => {
+export  const WeatherDisplay:  React.FC = () => {
 
   const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -125,6 +125,7 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = () => {
 
 
 return (
+ <div> <h4 className="mb-3">LOCAL WEATHER {}</h4>
   <div className="weather-container">
     <div className="weather-table">
       <div className="weather-header grid-row">
@@ -158,6 +159,7 @@ return (
         );
       })}
     </div>
+  </div>
   </div>
 );
 }
