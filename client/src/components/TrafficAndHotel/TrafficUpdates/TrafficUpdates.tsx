@@ -65,6 +65,11 @@ const TrafficUpdates = () => {
       <div className="traffic-updates-wrapper">
         <div className="traffic-updates-info">
           <p>Traffic issues will be listed here.</p>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus
+            non ducimus unde a odio id deserunt repudiandae rem, consequuntur
+            omnis quod possimus voluptate aspernatur nobis! Necessitatibus.
+          </p>
         </div>
         <div className="traffic-updates-map ">
           <MapContainer
