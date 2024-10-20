@@ -6,11 +6,13 @@ import logo_icon from '../../assets/road.png'; // https://www.flaticon.com/free-
 import UserInput from '../UserInput/UserInput';
 import TrafficAndHotel from '../TrafficAndHotel/TrafficAndHotel';
 import DeparturesAndWeather from '../DeparturesAndWeather/DeparturesAndWeather';
-
-
+import { useState } from 'react';
 
 
 const Dashboard = () => {
+    const [coordinates, setCoordinates] = useState(null); // 'coordinates' should be used the user's location in all components
+
+
   return (
     <>
       <Navbar expand="lg">
@@ -21,7 +23,7 @@ const Dashboard = () => {
           </Navbar.Brand>
         </Container>
       </Navbar>
-      <UserInput />
+      <UserInput setCoordinates={setCoordinates} />
       <DeparturesAndWeather />
       <TrafficAndHotel />
     </>
