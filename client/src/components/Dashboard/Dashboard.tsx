@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import logo_icon from '../../assets/road.png'; // https://www.flaticon.com/free-icon/road_712058
 import UserInput from '../UserInput/UserInput';
 import TrafficAndHotel from '../TrafficAndHotel/TrafficAndHotel';
-import DeparturesAndWeather from '../DeparturesAndWeather/DeparturesAndWeather';
+import {DeparturesAndWeather} from '../DeparturesAndWeather/DeparturesAndWeather';
 import { useState } from 'react';
 
 
@@ -24,7 +24,7 @@ const Dashboard = () => {
         </Container>
       </Navbar>
       <UserInput setCoordinates={setCoordinates} />
-      <DeparturesAndWeather />
+      <DeparturesAndWeather coordinates={coordinates} />
       <TrafficAndHotel />
     </>
   )

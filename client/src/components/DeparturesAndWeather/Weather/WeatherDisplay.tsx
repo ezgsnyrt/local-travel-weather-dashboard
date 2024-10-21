@@ -45,11 +45,10 @@ interface ApiResponse {
 
 interface WeatherDisplayProps {
   coordinates: {
-   lat: number;
+    lat: number;
     lon: number;
   };
- }
-
+}
 
 const getSevenDays = (data: ApiResponse): WeatherData[] => {
   const today = new Date();
@@ -66,8 +65,8 @@ const getSevenDays = (data: ApiResponse): WeatherData[] => {
 };
 
 axios.defaults.baseURL = 'http://localhost:3005';
-export const fetchWeatherData = async (latitude:number, longitude:number) => {
-  const coordinates = { lat: latitude, lon: longitude };
+export const fetchWeatherData = async ({coordinates}:any) => {
+
   try {
     const response = await axios.get('/weatherforecast', { params: coordinates });
     return response.data;
@@ -76,37 +75,29 @@ export const fetchWeatherData = async (latitude:number, longitude:number) => {
   }
 };
 
-export  const WeatherDisplay:  React.FC = () => {
+export  const WeatherDisplay:  React.FC<WeatherDisplayProps>= ({coordinates}:any) => {
 
   const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-  const handleGeolocation = async () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position: GeolocationPosition) => {
-          const latitude = position.coords.latitude;   
-          console.log(latitude)
-          const longitude = position.coords.longitude;   
-          console.log(longitude)
-          fetchWeatherData(latitude, longitude)
-          .then((data) => {
-            
-            const filteredData = getSevenDays(data);
-            setWeatherData(filteredData);
-          })
-          
-            .catch((error) => setError(error.message));
-        },
-        (error: GeolocationPositionError) => setError('Geolocation is not supported by this browser.'),
-        { enableHighAccuracy: true }
-      );
+  const handleLocation = async () => {
+    if (coordinates !== null ) {
+      fetchWeatherData(coordinates)
+       
+      .then((data) => {
+        
+        const filteredData = getSevenDays(data);
+        setWeatherData(filteredData);
+      })
+      
+        .catch((error) => setError(error.message));
+    
     } else {
-      setError('Geolocation is not supported by this browser.');
+      setError('No Location provided');
     }
   };
 
-  handleGeolocation();
+  handleLocation();
 }, []);
 
   

@@ -4,8 +4,12 @@ import './DeparturesAndWeather.css';
 import { Container } from 'react-bootstrap';
 import { WeatherDisplay } from './Weather/WeatherDisplay';
 
+interface DeparturesAndWeatherProps {
+    coordinates: any;
+  }
 {/* Lines in this section should be dynamically created in the related components */}
-export default function DeparturesAndWeather() {
+
+export const  DeparturesAndWeather: React.FC<DeparturesAndWeatherProps> = ({ coordinates }) => {
    
     return (
         <Container fluid id="departure-weather-section">
@@ -15,7 +19,7 @@ export default function DeparturesAndWeather() {
             </div>
             <div className="weather-wrapper p-3 mt-5 me-2 mb-5">
             
-                <WeatherDisplay   />
+            <WeatherDisplay coordinates={coordinates}/>
             </div>
         </Container>
     )
