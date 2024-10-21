@@ -20,7 +20,7 @@ interface TrainAnnouncement {
 interface FerryAnnouncement {
   DepartureTime: string;
   FromHarbor: string;
-  ToLocation: string[];
+  ToHarbor: string;
   TypeOfTraffic: string;
 }
 
@@ -42,43 +42,78 @@ const Departures = () => {
 
   // Fetch stations on component mount
   useEffect(() => {
-    const preloadTrainStations = async () => {
-      const xmlRequest = `
+    const preloadLocations = async () => {
+      const trainXmlRequest = `
       <REQUEST>
         <LOGIN authenticationkey='cc9e2bf1823a444cb75801b6777440c5'/>
         <QUERY objecttype='TrainStation' schemaversion='1'>
           <FILTER/>
-          <INCLUDE>Prognosticated</INCLUDE>
           <INCLUDE>AdvertisedLocationName</INCLUDE>
           <INCLUDE>LocationSignature</INCLUDE>
         </QUERY>
       </REQUEST>`;
 
+      const ferryXmlRequest = `
+      <REQUEST>
+        <LOGIN authenticationkey='cc9e2bf1823a444cb75801b6777440c5'/>
+        <QUERY objecttype='FerryAnnouncement' schemaversion='1.2'>
+          <FILTER/>
+          <INCLUDE>FromHarbor</INCLUDE>
+          <INCLUDE>ToHarbor</INCLUDE>
+        </QUERY>
+      </REQUEST>`;
+
       try {
         setLoading(true);
-        const response = await fetch("https://api.trafikinfo.trafikverket.se/v2/data.json", {
-          method: "POST",
-          headers: { "Content-Type": "text/xml" },
-          body: xmlRequest,
-        });
-        const data = await response.json();
 
-        const stationList = data.RESPONSE.RESULT[0].TrainStation.map((item: any) => ({
+        // Fetch train stations and ferry harbors in parallel
+        const [trainResponse, ferryResponse] = await Promise.all([
+          fetch("https://api.trafikinfo.trafikverket.se/v2/data.json", {
+            method: "POST",
+            headers: { "Content-Type": "text/xml" },
+            body: trainXmlRequest,
+          }),
+          fetch("https://api.trafikinfo.trafikverket.se/v2/data.json", {
+            method: "POST",
+            headers: { "Content-Type": "text/xml" },
+            body: ferryXmlRequest,
+          }),
+        ]);
+
+        const trainData = await trainResponse.json();
+        const ferryData = await ferryResponse.json();
+
+        // Process train stations
+        const stationList = trainData.RESPONSE.RESULT[0].TrainStation.map((item: any) => ({
           label: item.AdvertisedLocationName,
           value: item.LocationSignature,
         }));
 
-        setStations(stationList);
+        // Process ferry harbors (both from and to harbors)
+        const ferryHarbors = new Set(); // Use a set to avoid duplicates
+        ferryData.RESPONSE.RESULT[0].FerryAnnouncement.forEach((ferry: any) => {
+          ferryHarbors.add(ferry.FromHarbor.Name);
+          ferryHarbors.add(ferry.ToHarbor.Name);
+        });
+
+        const harborList = Array.from(ferryHarbors).map((harbor) => ({
+          label: harbor,
+          value: harbor,
+        }));
+
+        // Combine both train stations and harbors
+        setStations([...stationList, ...harborList]);
       } catch (error) {
-        console.error("Error fetching stations", error);
-        setError("Could not load stations. Please try again later.");
+        console.error("Error fetching stations or harbors", error);
+        setError("Could not load stations or harbors. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
-    preloadTrainStations();
+    preloadLocations();
   }, []);
+
 
   // Handle station search input
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,15 +176,13 @@ const Departures = () => {
     const ferryXmlRequest = `
     <REQUEST>
       <LOGIN authenticationkey='cc9e2bf1823a444cb75801b6777440c5'/>
-      <QUERY objecttype='FerryAnnouncement' orderby='DepartureTime' schemaversion='1'>
+      <QUERY objecttype='FerryAnnouncement' orderby='DepartureTime' schemaversion='1.2'>
         <FILTER>
-          <EQ name='FromHarbor' value='${selectedStation.value}'/>
-          <EQ name='ActivityType' value='Avgang'/>
+          <EQ name='FromHarbor.Name' value='${selectedStation.value}'/>
         </FILTER>
         <INCLUDE>DepartureTime</INCLUDE>
         <INCLUDE>FromHarbor</INCLUDE>
-        <INCLUDE>ToLocation</INCLUDE>
-        <INCLUDE>TypeOfTraffic</INCLUDE>
+        <INCLUDE>ToHarbor</INCLUDE>
       </QUERY>
     </REQUEST>`;
 
@@ -173,15 +206,15 @@ const Departures = () => {
 
       const trainAnnouncements = trainData.RESPONSE.RESULT[0]?.TrainAnnouncement || [];
       const ferryAnnouncements = ferryData.RESPONSE.RESULT[0]?.FerryAnnouncement || [];
+      console.log(ferryAnnouncements)
 
       // Combine both train and ferry announcements
       const combinedAnnouncements = [
         ...trainAnnouncements,
         ...ferryAnnouncements.map((ferry: any) => ({
           DepartureTime: ferry.DepartureTime,
-          FromHarbor: ferry.FromHarbor,
-          ToLocation: ferry.ToLocation,
-          TypeOfTraffic: ferry.TypeOfTraffic,
+          FromHarbor: ferry.FromHarbor.Name,
+          ToHarbor: ferry.ToHarbor.Name,
         })),
       ];
 
@@ -202,12 +235,15 @@ const Departures = () => {
     return `${hours}:${minutes}`;
   };
 
-  const mapLocationLabels = (locations: string[]) => {
+  const mapLocationLabels = (locations: string[] | undefined) => {
+    if (!locations || locations.length === 0) return "N/A"; // Handle undefined or empty locations
+    console.log("locations: " + locations)
     return locations.map((loc) => {
       const station = stations.find((station) => station.value === loc);
       return station ? station.label : loc; // Show the label if found, else show the location signature
-    }).join(", ") || "N/A";
+    }).join(", ");
   };
+
 
   // Pagination logic
   const indexOfLastAnnouncement = currentPage * rowsPerPage;
@@ -227,15 +263,13 @@ const Departures = () => {
   };
 
   return (
-
-
-    <div className="departureContainer">
+    <div className="departures-wrapper">
       {loading ? (
         <p>Laddar stationer...</p>
       ) : (
         <div>
           {/* Search Input */}
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 search-container">
             <Form.Control
               type="text"
               value={searchTerm}
@@ -243,33 +277,25 @@ const Departures = () => {
               placeholder="Search station..."
               className="form-control"
             />
+
+            {/* Dropdown Suggestions */}
+            {suggestions.length > 0 && (
+              <ul className="suggestions-dropdown list-group mb-3">
+                {suggestions.slice(0, 4).map((suggestion) => (
+                  <li
+                    key={suggestion.value}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className="list-group-item list-group-item-action"
+                  >
+                    {suggestion.label}
+                  </li>
+                ))}
+              </ul>
+            )}
           </Form.Group>
 
-          {/* Dropdown Suggestions */}
-          {suggestions.length > 0 && (
-            <ul className="list-group mb-3">
-              {suggestions.slice(0, 4).map((suggestion) => (
-                <li
-                  key={suggestion.value}
-                  onClick={() => handleSuggestionClick(suggestion)}
-                  className="list-group-item list-group-item-action"
-                >
-                  {suggestion.label}
-                </li>
-              ))}
-
-            </ul>
-          )}
-
           {/* Search Button */}
-          <Button
-            variant="primary"
-            onClick={searchTrainsAndFerries}
-            disabled={!selectedStation}
-            className="mb-3"
-          >
-            Search departures
-          </Button>
+
 
           {/* Loading and Error Handling */}
           {queryLoading && <p>Loading departures</p>}
@@ -300,15 +326,26 @@ const Departures = () => {
                   ) : (
                     <>
                       <td>{announcement.DepartureTime}</td>
-                      <td>{mapLocationLabels(announcement.ToLocation)}</td>
-                      <td>{announcement.FromHarbor}</td>
-                      <td>{announcement.TypeOfTraffic}</td>
+                      <td>{mapLocationLabels([announcement.FromHarbor])}</td> {/* Fix for From Harbor */}
+                      <td>{mapLocationLabels([announcement.ToHarbor])}</td> {/* Fix for To Harbor */}
+                      <td>X</td>
+                      <td>{announcement.TypeOfTraffic ?? "Färja"}</td>
                     </>
                   )}
                 </tr>
               ))}
+
             </tbody>
           </Table>
+
+          <Button
+            variant="primary"
+            onClick={searchTrainsAndFerries}
+            disabled={!selectedStation}
+            className="mb-3"
+          >
+            Search departures
+          </Button>
 
           {/* Pagination */}
           <Pagination className="justify-content-center">
@@ -329,7 +366,8 @@ const Departures = () => {
         </div>
       )}
     </div>
-  )
+  );
+
 
 };
 

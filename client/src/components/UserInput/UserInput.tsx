@@ -3,7 +3,7 @@ import './UserInput.css';
 import { Button, Container, Form, InputGroup, ListGroup} from 'react-bootstrap';
 import { useState } from 'react';
 
-const UserInput = () => {
+const UserInput = ({ setCoordinates }:any) => {
   const [location, setLocation] = useState<string>(''); // Keep user input
   const [predictionSelected, setPredictionSelected] = useState<boolean>(false);
   const [autoPredictions, setAutoPredictions] = useState<any[]>([]); // Keep Google autocomplete predictions
@@ -62,6 +62,7 @@ const UserInput = () => {
 
       const data = await response.json();
       console.log('Coordinates:', data);
+      setCoordinates(data);
 
     } catch (error) {
       console.error('Error:', error);
