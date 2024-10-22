@@ -12,6 +12,7 @@ import { useState } from 'react';
 const Dashboard = () => {
     const [coordinates, setCoordinates] = useState(null); // 'coordinates' should be used the user's location in all components
 
+    console.log('Coordinates in Dashboard:', coordinates);
 
   return (
     <>

@@ -46,7 +46,7 @@ interface ApiResponse {
 interface WeatherDisplayProps {
   coordinates: {
     lat: number;
-    lon: number;
+    lng: number;
   };
 }
 
@@ -65,10 +65,17 @@ const getSevenDays = (data: ApiResponse): WeatherData[] => {
 };
 
 axios.defaults.baseURL = 'http://localhost:3005';
-export const fetchWeatherData = async ({coordinates}:any) => {
-
-  try {
-    const response = await axios.get('/weatherforecast', { params: coordinates });
+export const fetchWeatherData = async (coordinates: { lat: number; lng: number }) => {
+try {
+    const response = await axios.get('/weatherforecast',
+     { 
+      params: 
+      {
+        lat: coordinates.lat,
+        lng: coordinates.lng    
+        }
+  });
+   
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch weather data from server');
@@ -80,27 +87,26 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps>= ({coordinates}:any
   const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
+   
   const handleLocation = async () => {
-    if (coordinates !== null ) {
-      fetchWeatherData(coordinates)
-       
-      .then((data) => {
-        
+    if (coordinates && coordinates.lat && coordinates.lng) { 
+      try {
+        setError(null);
+        const data = await fetchWeatherData(coordinates);
         const filteredData = getSevenDays(data);
         setWeatherData(filteredData);
-      })
-      
-        .catch((error) => setError(error.message));
-    
+      } catch (error) {
+       setError ('Error No Location provided')
+      }
     } else {
       setError('No Location provided');
     }
   };
 
   handleLocation();
-}, []);
+}, [coordinates]);
 
-  
+console.log('Weather Data:', weatherData);
   if (error) {
     return <div>{error}</div>;
   }
@@ -114,7 +120,6 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps>= ({coordinates}:any
   const today = new Date();
   
 
-
 return (
  <div> <h4 className="mb-3">LOCAL WEATHER {}</h4>
   <div className="weather-container">
@@ -126,13 +131,15 @@ return (
         <div className="grid-item header">WEATHER</div>
       </div>
 
-   
+      
       {weatherData.map((data: WeatherData, index: number) => {
+        console.log('response data:', weatherData);
         const date = new Date(today);
         date.setDate(today.getDate() + index);
         const formattedDate = date.toLocaleDateString('en-US', {
           weekday: 'long',
         });
+      
         const temperature = data.main.temp.toFixed(1);
       const rain = data.main.humidity;// && data.main.humidity?['1h'] ;//? data.main.humidity?['1h'] : 0;
         const description = data.weather[0].description;

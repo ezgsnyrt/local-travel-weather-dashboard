@@ -9,8 +9,10 @@ interface DeparturesAndWeatherProps {
   }
 {/* Lines in this section should be dynamically created in the related components */}
 
+
 export const  DeparturesAndWeather: React.FC<DeparturesAndWeatherProps> = ({ coordinates }) => {
-   
+    console.log('Coordinates in DeparturesAndWeather:', coordinates);
+
     return (
         <Container fluid id="departure-weather-section">
             <div className="departures-wrapper p-3 mt-5 ms-2 mb-5">

@@ -5,11 +5,13 @@ async function getCoordsForAddress(address:string) {
     const response = await axios.get(  
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
         address
-        )}&key=${process.env.API_KEY}`
+        )}&key=${process.env.KEY}`
     );
 
     const data = response.data;
-    const location = response.data.results[0].geometry.location;
+;
+
+    const location = data.results[0].geometry.location;
     console.log(location);
     return location;
 }
