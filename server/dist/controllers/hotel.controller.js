@@ -11,9 +11,22 @@ const fetchHotel = async (req, res) => {
         const response = await axios_1.default.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=lodging&key=${process.env.HOTEL_APT_KEY}`);
         const hotelData = response.data.results.slice(0, 3);
         console.log(hotelData);
+        const hotelDetails = await Promise.all(hotelData.map(async (hotel) => {
+            const placeDetails = await axios_1.default.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${hotel.place_id}&fields=name,website,photos&key=${process.env.HOTEL_APT_KEY}`);
+            const result = placeDetails.data.result;
+            const imgUrl = result.photos
+                ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${result.photos[0].photo_reference}&key=${process.env.HOTEL_APT_KEY}`
+                : '';
+            return {
+                name: result.name,
+                imgUrl: imgUrl,
+                website: result.website || 'No website found😶',
+            };
+        }));
+        res.json(hotelDetails);
     }
     catch (error) {
-        throw new Error('Failed to fetch hotel API');
+        res.status(500).send('Failed to fetch hotel API');
     }
 };
 exports.fetchHotel = fetchHotel;

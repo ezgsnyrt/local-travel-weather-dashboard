@@ -9,15 +9,17 @@ interface HotelUpdatesProps {
   coordinates: {
     lat: number;
     lng: number;
-  };
+  } | null;
 }
-const HotelUpdates: React.FC<HotelUpdatesProps> = () => {
+//*Receiving coordinates as props to passing down
+const HotelUpdates: React.FC<HotelUpdatesProps> = ({ coordinates }) => {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loadings, setLoadings] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchHotels = async () => {
+      if (!coordinates) return;
       try {
         const response = await fetch(
           `http://localhost:3005/hotels?lat=${coordinates.lat}&lng=${coordinates.lng}`
@@ -31,7 +33,7 @@ const HotelUpdates: React.FC<HotelUpdatesProps> = () => {
       }
     };
     fetchHotels();
-  });
+  }, [coordinates]);
 
   return (
     <div className='hotel-container'>
