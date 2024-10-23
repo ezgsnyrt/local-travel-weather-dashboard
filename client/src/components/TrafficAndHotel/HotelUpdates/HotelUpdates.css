@@ -1,5 +1,4 @@
 .hotel-container {
-  width: 45%;
   background-color: #ffffff;
   padding: 2%;
 }
@@ -13,7 +12,7 @@ li {
   align-items: center;
   justify-content: center;
   list-style: none;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
 }
 .image-container {
   display: flex;
@@ -22,7 +21,7 @@ li {
 }
 .hotelImage {
   width: 100%;
-  max-width: 300px;
+  max-width: 400px;
 }
 a {
   text-decoration: none;
@@ -38,6 +37,9 @@ a {
   width: 100%;
   height: auto;
 }
+.websiteBtn {
+  margin-bottom: 8%;
+}
 h5 {
   padding: 10px 20px;
   margin: 10px;
@@ -45,17 +47,22 @@ h5 {
 
 @media (min-width: 320px) and (max-width: 572px) {
   .hotel-container {
-    width: 80%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 3%;
+  }
+  li {
+    padding-right: 2em;
   }
   .image-container {
     flex-direction: column;
     width: 80%;
   }
+
   .websiteBtn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
+    padding: 0.2rem 0.2rem;
+    font-size: 0.7rem;
   }
   h5 {
     font-size: 16px;
@@ -68,5 +75,13 @@ h5 {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 20px;
+  }
+}
+
+/*Only for the btn */
+@media (min-width: 1000px) and (max-width: 1300px) {
+  .websiteBtn {
+    padding: 0.4rem 0.5rem;
+    font-size: 1rem;
   }
 }
