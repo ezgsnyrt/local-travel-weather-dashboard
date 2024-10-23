@@ -42,7 +42,7 @@ export const fetchHotel: RequestHandler = async (req, res) => {
         const result = placeDetails.data.result;
         //* Sometime phones are unavailable, so added if condition.
         const imgUrl = result.photos
-          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${result.photos[0].photo_reference}&key=${process.env.HOTEL_APT_KEY}`
+          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${result.photos[0].photo_reference}&key=${process.env.HOTEL_APT_KEY}`
           : '';
         return {
           name: result.name,

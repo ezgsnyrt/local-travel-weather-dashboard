@@ -47,11 +47,26 @@ const HotelUpdates: React.FC<HotelUpdatesProps> = ({ coordinates }) => {
           <ul>
             {hotels.map((hotel, index) => (
               <li key={index}>
-                <strong>{hotel.name}</strong>
-                {hotel.imgUrl && <img src={hotel.imgUrl} alt={hotel.name} />}
-                <a href={hotel.website} target='_blank' rel='noreferrer'>
-                  Visit Website
-                </a>
+                <div className='image-container'>
+                  {hotel.imgUrl && (
+                    <img
+                      className='hotelImage'
+                      src={hotel.imgUrl}
+                      alt={hotel.name}
+                    />
+                  )}
+                  <div className='btn-name-container'>
+                    <h5>{hotel.name}</h5>
+                    <button
+                      type='button'
+                      className='btn btn-success websiteBtn'
+                    >
+                      <a href={hotel.website} target='_blank' rel='noreferrer'>
+                        Visit Website
+                      </a>
+                    </button>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
