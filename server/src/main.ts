@@ -17,3 +17,10 @@ app.use(cors(corsOptions));
 app.get("/coordinates", getCoordinates);
 app.get("/autocomplete", predictAddress);
 app.get("/weatherforecast", getWeatherdata);
+
+app.listen(PORT, () => {
+  console.log("Server running at PORT: ", PORT);
+}).on("error", (error:any) => {
+  // gracefully handle error
+  throw new Error(error.message);
+});
