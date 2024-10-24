@@ -1,10 +1,11 @@
-import express from "express";
+import express, {Request, Response} from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import {getCoordinates,predictAddress,} from './controllers/address.controller';
 import { fetchHotel } from './controllers/hotel.controller';
 import { getLocationName } from './controllers/departure.controller';
 import { getWeatherdata } from "./controllers/weather.controller";
+
 
 const PORT = 3005;
 const app = express();
@@ -23,18 +24,24 @@ app.get('/hotels', fetchHotel);
 app.get("/weatherforecast", getWeatherdata);
 
 
-app.post('/api/location-name', async (req: Request, res: Response) => {
-  const { lat, lng } = req.body; // Extract latitude and longitude from the request body
+app.use(express.json()); // Ensure body parsing is enabled
 
-  // Call the getLocationName function
-  const locationName = await getLocationName({ lat, lng });
+app.post('/api/location-name', async (req: Request, res: Response): Promise<void> => {
+  const { lat, lng } = req.body as { lat: number, lng: number }; // Ensure body typing
 
-  if (locationName) {
-    res.json({ locationName }); // Respond with the location name if found
-  } else {
-    res.status(400).json({ error: "Unable to retrieve location name." }); // Respond with an error if not found
+  try {
+    const locationName = await getLocationName({ lat, lng });
+
+    if (locationName) {
+      res.json({ locationName });
+    } else {
+      res.status(400).json({ error: "Unable to retrieve location name." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Server error." });
   }
 });
+
 
 
 
