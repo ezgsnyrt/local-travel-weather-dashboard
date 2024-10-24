@@ -15,7 +15,7 @@ async function getCoordsForAddress(address: string) {
   const response = await axios.get<GeocodeResponse>(
     `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
       address
-    )}&key=${process.env.API_KEY}`
+    )}&key=AIzaSyD7VrTsMRUAYbNzASLk-1BdfNIXoTEzL5s`
   );
 
   const data = response.data;
@@ -47,7 +47,7 @@ export const predictAddress: RequestHandler = async (
       includedRegionCodes: ['se'],
     },
     headers: {
-      'X-Goog-Api-Key': process.env.API_KEY,
+      'X-Goog-Api-Key': "AIzaSyD7VrTsMRUAYbNzASLk-1BdfNIXoTEzL5s",
     },
   });
   console.log(JSON.stringify(response.data));

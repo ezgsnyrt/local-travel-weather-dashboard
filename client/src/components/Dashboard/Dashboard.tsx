@@ -9,7 +9,8 @@ import DeparturesAndWeather from '../DeparturesAndWeather/DeparturesAndWeather';
 import { useState } from 'react';
 
 const Dashboard = () => {
-  const [coordinates, setCoordinates] = useState(null); // 'coordinates' should be used the user's location in all components
+  const [coordinates, setCoordinates] = useState<{lat: number | null, lng: number | null}>({lat: null, lng: null}); // 'coordinates' should be used the user's location in all components
+  const [locationName, setLocationName] = useState<string | null>(null);
 
   return (
     <>
@@ -21,8 +22,8 @@ const Dashboard = () => {
           </Navbar.Brand>
         </Container>
       </Navbar>
-      <UserInput setCoordinates={setCoordinates} />
-      <DeparturesAndWeather />
+      <UserInput setCoordinates={setCoordinates} setLocationName={setLocationName} />
+      <DeparturesAndWeather locationName={locationName}/>
       <TrafficAndHotel coordinates={coordinates} />
     </>
   );
