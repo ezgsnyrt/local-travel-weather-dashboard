@@ -8,27 +8,24 @@ import TrafficAndHotel from '../TrafficAndHotel/TrafficAndHotel';
 import {DeparturesAndWeather} from '../DeparturesAndWeather/DeparturesAndWeather';
 import { useState } from 'react';
 
-
 const Dashboard = () => {
-    const [coordinates, setCoordinates] = useState(null); // 'coordinates' should be used the user's location in all components
-
-    console.log('Coordinates in Dashboard:', coordinates);
+  const [coordinates, setCoordinates] = useState(null); // 'coordinates' should be used the user's location in all components
 
   return (
     <>
-      <Navbar expand="lg">
+      <Navbar expand='lg'>
         <Container>
-          <Navbar.Brand href="#home">
-            <img src={logo_icon} className="logo-icon me-1 mb-2"/>
-            <span className="logo-name">StadTrafik</span>
+          <Navbar.Brand href='#home'>
+            <img src={logo_icon} className='logo-icon me-1 mb-2' />
+            <span className='logo-name'>StadTrafik</span>
           </Navbar.Brand>
         </Container>
       </Navbar>
       <UserInput setCoordinates={setCoordinates} />
       <DeparturesAndWeather coordinates={coordinates} />
-      <TrafficAndHotel />
+      <TrafficAndHotel coordinates={coordinates} />
     </>
-  )
-}
+  );
+};
 
 export default Dashboard;

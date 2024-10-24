@@ -6,10 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.predictAddress = exports.getCoordinates = void 0;
 const axios_1 = __importDefault(require("axios"));
 async function getCoordsForAddress(address) {
-    const response = await axios_1.default.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.KEY}`);
+    const response = await axios_1.default.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.API_KEY}`);
     const data = response.data;
-    console.log("TEST ", data);
-    console.log;
     const location = data.results[0].geometry.location;
     console.log(location);
     return location;
@@ -27,11 +25,11 @@ const predictAddress = async (req, res) => {
         url: 'https://places.googleapis.com/v1/places:autocomplete',
         data: {
             input: input,
-            includedRegionCodes: ["se"]
+            includedRegionCodes: ['se'],
         },
         headers: {
-            'X-Goog-Api-Key': process.env.API_KEY
-        }
+            'X-Goog-Api-Key': process.env.API_KEY,
+        },
     });
     console.log(JSON.stringify(response.data));
     res.send(response.data);
