@@ -1,12 +1,9 @@
-import express, { Request, Response } from 'express';
+import express from "express";
 import cors from 'cors';
-import { Router } from 'express';
 import 'dotenv/config';
-import {
-  getCoordinates,
-  predictAddress,
-} from './controllers/address.controller';
+import {getCoordinates,predictAddress,} from './controllers/address.controller';
 import { fetchHotel } from './controllers/hotel.controller';
+import { getWeatherdata } from "./controllers/weather.controller";
 
 const PORT = 3005;
 const app = express();
@@ -20,12 +17,11 @@ app.use(cors(corsOptions));
 app.get('/coordinates', getCoordinates);
 app.get('/autocomplete', predictAddress);
 app.get('/hotels', fetchHotel);
+app.get("/weatherforecast", getWeatherdata);
 
-app
-  .listen(PORT, () => {
-    console.log('Server running at PORT: ', PORT);
-  })
-  .on('error', (error: any) => {
-    // gracefully handle error
-    throw new Error(error.message);
-  });
+app.listen(PORT, () => {
+  console.log("Server running at PORT: ", PORT);
+}).on("error", (error:any) => {
+  // gracefully handle error
+  throw new Error(error.message);
+});
