@@ -1,19 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import './Weather.css';
+import axios from 'axios';
+
+
+
 
 interface WeatherData {
-  dt: number;
+  dt: number; 
   main: {
-    temp: number;
-  
+    temp: number; 
+    feels_like: number; 
+    temp_min: number; 
+    temp_max: number; 
+    pressure: number; 
+    sea_level: number;
+    grnd_level: number; 
+    humidity: number; 
+    temp_kf: number; 
   };
   weather: {
-    description: string;
+    id: number;
+    main: string; 
+    description: string; 
     icon: string;
   }[];
-  rain?: {
-    '1h'?: number;
-};
+  clouds: {
+    all: number; 
+  };
+  wind: {
+    speed: number; 
+    deg: number;
+    gust: number; 
+  };
+  visibility: number; 
+  pop: number; 
+  sys: {
+    pod: string; 
+  };
+  dt_txt: string; 
 }
 interface ApiResponse {
   list?: WeatherData[];
@@ -21,10 +45,10 @@ interface ApiResponse {
 
 interface WeatherDisplayProps {
   coordinates: {
-   lat: number;
-    lon: number;
+    lat: number;
+    lng: number;
   };
- }
+}
 
 const getSevenDays = (data: ApiResponse): WeatherData[] => {
   const today = new Date();
@@ -40,42 +64,54 @@ const getSevenDays = (data: ApiResponse): WeatherData[] => {
   }).slice(0, 5) || []; 
 };
 
+axios.defaults.baseURL = 'http://localhost:3005';
+export const fetchWeatherData = async (coordinates: { lat: number; lng: number }) => {
+try {
+    const response = await axios.get('/weatherforecast',
+     { 
+      params: 
+      {
+        lat: coordinates.lat,
+        lng: coordinates.lng    
+        }
+  });
+   
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch weather data from server');
+  }
+};
 
-export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates }) => {
+export  const WeatherDisplay:  React.FC<WeatherDisplayProps>= ({coordinates}:any) => {
+
   const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
   const [error, setError] = useState<string | null>(null);
-
- 
-  const fetchWeatherData = async () => {
-    const apiKey = 'f40f4543214ad55ead8d6ca12cb39ee0'; 
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&units=metric&appid=${apiKey}`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Error fetching weather data');
+  useEffect(() => {
+   
+  const handleLocation = async () => {
+    if (coordinates && coordinates.lat && coordinates.lng) { 
+      try {
+        setError(null);
+        const data = await fetchWeatherData(coordinates);
+        const filteredData = getSevenDays(data);
+        setWeatherData(filteredData);
+      } catch (error) {
+       setError ('Error No Location provided')
       }
-      const data: ApiResponse = await response.json();
-      const sevenDayForecast = getSevenDays(data);
-      setWeatherData(sevenDayForecast);
-
-    
-    } catch (error) {
-      setError('Unable to fetch weather data');
-      console.error('API call error:', error);
+    } else {
+      setError('No Location provided');
     }
   };
 
-  
-    useEffect(() => {
-    fetchWeatherData();
-  }, [coordinates]); 
+  handleLocation();
+}, [coordinates]);
 
+console.log('Weather Data:', weatherData);
   if (error) {
     return <div>{error}</div>;
   }
 
-  if (!weatherData.length) {
+  if (!weatherData == null) {
     return <div>Loading...</div>;
   }
 
@@ -84,13 +120,10 @@ export  const WeatherDisplay:  React.FC<WeatherDisplayProps> = ({ coordinates })
   const today = new Date();
   
 
-
 return (
+ <div> <h4 className="mb-3">LOCAL WEATHER {}</h4>
   <div className="weather-container">
-    <h2>LOCAL WEATHER</h2>
-
     <div className="weather-table">
-    
       <div className="weather-header grid-row">
         <div className="grid-item header">DAY</div>
         <div className="grid-item header">TEMP °C</div>
@@ -98,15 +131,17 @@ return (
         <div className="grid-item header">WEATHER</div>
       </div>
 
-   
+      
       {weatherData.map((data: WeatherData, index: number) => {
+        console.log('response data:', weatherData);
         const date = new Date(today);
         date.setDate(today.getDate() + index);
         const formattedDate = date.toLocaleDateString('en-US', {
           weekday: 'long',
         });
+      
         const temperature = data.main.temp.toFixed(1);
-        const rain = data.rain && data.rain['1h'] ? data.rain['1h'] : 0;
+      const rain = data.main.humidity;// && data.main.humidity?['1h'] ;//? data.main.humidity?['1h'] : 0;
         const description = data.weather[0].description;
         const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
 
@@ -114,7 +149,7 @@ return (
           <div key={data.dt} className="weather-row grid-row">
             <div className="grid-item">{formattedDate}</div>
             <div className="grid-item">{temperature} °C</div>
-            <div className="grid-item">{rain} %</div>
+           <div className="grid-item">{rain} %</div> 
             <div className="grid-item weather-icon">
               <img src={iconUrl} alt={description} />
             </div>
@@ -122,6 +157,7 @@ return (
         );
       })}
     </div>
+  </div>
   </div>
 );
 }

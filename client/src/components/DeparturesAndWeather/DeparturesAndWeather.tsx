@@ -12,7 +12,7 @@ interface DeparturesAndWeatherProps {
 export default function DeparturesAndWeather({locationName}: DeparturesAndWeatherProps) {
     const solnaCoordinates = {
         lat: 59.3600,
-        lon: 18.0000,
+        lng: 18.0000,
       };
     return (
         <Container fluid id="departure-weather-section">
@@ -21,8 +21,8 @@ export default function DeparturesAndWeather({locationName}: DeparturesAndWeathe
                 <Departures locationName={locationName}/>
             </div>
             <div className="weather-wrapper p-3 mt-5 me-2 mb-5">
-                <h4 className="mb-3">LOCAL WEATHER</h4>
-                <WeatherDisplay  coordinates={solnaCoordinates} />
+            
+            <WeatherDisplay coordinates={solnaCoordinates}/>
             </div>
         </Container>
     )
