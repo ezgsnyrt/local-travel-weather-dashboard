@@ -13,7 +13,7 @@ interface Props {
       <REQUEST>
         <LOGIN authenticationkey="cc9e2bf1823a444cb75801b6777440c5"/>
         <QUERY objecttype="TrainStation" namespace="rail.infrastructure" schemaversion="1.5" limit="10">
-          <FILTER><NEAR name="Geometry.WGS84" value="${lng} ${lat}" mindistance="0" maxdistance="2000" /></FILTER>
+          <FILTER><NEAR name="Geometry.WGS84" value="${lng} ${lat}" mindistance="0" maxdistance="4000" /></FILTER>
           <INCLUDE>AdvertisedLocationName</INCLUDE>
         </QUERY>
       </REQUEST>`;
