@@ -28,7 +28,7 @@ const TrafficUpdates = () => {
         const trafficFlowData =
           response.data?.RESPONSE?.RESULT?.[0]?.TrafficFlow || [];
 
-        // Gelen data içinden pozisyonları çıkarıyoruz
+        // getting position from data
         const positionArray = trafficFlowData
           .map((trafficFlow) => {
             const pointString = trafficFlow.Geometry.WGS84;
@@ -42,7 +42,7 @@ const TrafficUpdates = () => {
 
             return null;
           })
-          .filter(Boolean); // Null olanları filtrelemek için
+          .filter(Boolean);
 
         console.log("positionArray", positionArray);
         setPositions(positionArray);
