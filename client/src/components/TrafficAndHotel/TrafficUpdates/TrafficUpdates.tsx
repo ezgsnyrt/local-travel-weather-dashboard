@@ -1,26 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./TrafficUpdates.css";
-<<<<<<< HEAD
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axios from "axios";
 
 const TrafficUpdates = () => {
   const [positions, setPositions] = useState([]);
-=======
-import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
-import axios from "axios";
-
-const TrafficUpdates = () => {
-  type Position = [number, number];
-
-  const positionArray: Position[] = [
-    [56.04587001491054, 12.697239762273881],
-    [56.14587001491054, 12.797239762273881],
-    [56.24587001491054, 12.897239762273881],
-  ];
-
-  const [apiData, setApiData] = useState({});
->>>>>>> 7b72255 (refactor: traffic updates)
 
   const url = "https://api.trafikinfo.trafikverket.se/v2/data.json";
   const headers = {
