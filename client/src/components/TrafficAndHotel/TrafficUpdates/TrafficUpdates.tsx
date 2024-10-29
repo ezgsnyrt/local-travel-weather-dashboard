@@ -3,8 +3,26 @@ import "./TrafficUpdates.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axios from "axios";
 
-const TrafficUpdates = () => {
-  const [positions, setPositions] = useState([]);
+//Type - TrafficFlow data structure
+interface TrafficFlow {
+  SiteId: string;
+  MeasurementTime: string;
+  VehicleFlowRate: number;
+  AverageVehicleSpeed: number;
+  DataQuality: string;
+  Geometry: {
+    WGS84: string;
+  };
+}
+
+// Type - position type with lat/lon and details
+interface Position {
+  position: [number, number];
+  details: TrafficFlow;
+}
+
+const TrafficUpdates: React.FC = () => {
+  const [positions, setPositions] = useState<Position[]>([]);
 
   const url = "https://api.trafikinfo.trafikverket.se/v2/data.json";
   const headers = {
@@ -23,13 +41,13 @@ const TrafficUpdates = () => {
       try {
         const response = await axios.post(url, data, { headers });
 
-        console.log("useEffect içinde gelen data", response.data);
+        console.log("Fetched data:", response.data);
 
-        const trafficFlowData =
+        const trafficFlowData: TrafficFlow[] =
           response.data?.RESPONSE?.RESULT?.[0]?.TrafficFlow || [];
 
-        //positions from data
-        const positionArray = trafficFlowData
+        // gettingg positions from data
+        const positionArray: Position[] = trafficFlowData
           .map((trafficFlow) => {
             const pointString = trafficFlow.Geometry.WGS84;
             const coordinates = pointString.match(/POINT \(([^ ]+) ([^ ]+)\)/);
@@ -42,12 +60,12 @@ const TrafficUpdates = () => {
 
             return null;
           })
-          .filter(Boolean); // Null olanları filtrelemek için
+          .filter((item): item is Position => item !== null);
 
-        console.log("positionArray", positionArray);
+        console.log("Position Array:", positionArray);
         setPositions(positionArray);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error fetching traffic data:", error);
       }
     };
     fetchData();
