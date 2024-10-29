@@ -74,9 +74,9 @@ const TrafficUpdates = () => {
       <h4 className="mt-2">TRAFFIC UPDATES</h4>
 
       <MapContainer
-        style={{ height: "40vh", width: "100%" }}
-        center={positions.length ? positions[0].position : [56.04673, 12.69437]}
-        zoom={12}
+        style={{ height: "50vh", width: "100%" }}
+        center={positions.length ? positions[0].position : [59.3293, 18.0686]}
+        zoom={13}
         maxZoom={30}
       >
         <TileLayer
