@@ -28,21 +28,24 @@ export const fetchHotel: RequestHandler = async (req, res) => {
   const { lat, lng } = req.query;
   try {
     const response = await axios.get<SearchResponse>(
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=lodging&key=${process.env.HOTEL_APT_KEY}`
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=lodging&key=AIzaSyAvM90CpjRpKkRCVcWsO59hOrVaBFIr7ek`
     );
     const hotelData = response.data.results.slice(0, 3);
-    //console.log(hotelData);
+    hotelData.forEach(hotel => {
+      console.log(hotel)
+    })
+    console.log("Hotel Data" + JSON.stringify(hotelData, null, 2));
 
     //* Receiving hotels' name, website and image through the response(lat and lng)
     const hotelDetails = await Promise.all(
       hotelData.map(async (hotel: any) => {
         const placeDetails = await axios.get<PlaceDetailsResponse>(
-          `https://maps.googleapis.com/maps/api/place/details/json?place_id=${hotel.place_id}&fields=name,website,photos&key=${process.env.HOTEL_APT_KEY}`
+          `https://maps.googleapis.com/maps/api/place/details/json?place_id=${hotel.place_id}&fields=name,website,photos&key=AIzaSyAvM90CpjRpKkRCVcWsO59hOrVaBFIr7ek`
         );
         const result = placeDetails.data.result;
         //* Sometime phones are unavailable, so added if condition.
         const imgUrl = result.photos
-          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${result.photos[0].photo_reference}&key=${process.env.HOTEL_APT_KEY}`
+          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${result.photos[0].photo_reference}&key=AIzaSyAvM90CpjRpKkRCVcWsO59hOrVaBFIr7ek`
           : '';
         return {
           name: result.name,
