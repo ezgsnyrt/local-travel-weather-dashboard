@@ -1,49 +1,51 @@
+/* TrafficUpdates.css */
 .traffic-container {
-  width: 55%;
-  background-color: #ffffff;
-  padding: 2%;
-}
-
-.traffic-updates-wrapper {
   width: 100%;
-  text-align: justify;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
-.traffic-updates-info {
-  width: 55%;
-  text-align: justify;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.traffic-container h4 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.traffic-updates-map {
-  width: 45%;
-  padding: 5%;
-  text-align: start;
+/* responsive  for map*/
+.leaflet-container {
+  width: 100%;
+  height: 40vh;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-@media (min-width: 320px) and (max-width: 576px) {
-  .traffic-container {
-    width: 100%;
-    margin: 5% 0;
+/*  mobile */
+@media (max-width: 768px) {
+  .traffic-container h4 {
+    font-size: 1.2rem;
   }
-
-  .traffic-updates-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .traffic-updates-info,
-  .traffic-updates-map {
-    width: 100%;
-    padding: 3%;
+  .leaflet-container {
+    height: 50vh;
   }
 }
 
-/* @media (min-width: 577px) and (max-width: 768px) {}
+/*  (tablets) */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .traffic-container h4 {
+    font-size: 1.4rem;
+  }
+  .leaflet-container {
+    height: 45vh;
+  }
+}
 
-@media (min-width: 769px) and (max-width: 1024px) {}  */
+/* pc laptop-desktop */
+@media (min-width: 1201px) {
+  .traffic-container h4 {
+    font-size: 1.8rem;
+  }
+  .leaflet-container {
+    height: 60vh;
+  }
+}
