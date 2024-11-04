@@ -28,7 +28,7 @@ export const fetchHotel: RequestHandler = async (req, res) => {
   const { lat, lng } = req.query;
   try {
     const response = await axios.get<SearchResponse>(
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=lodging&key=AIzaSyAvM90CpjRpKkRCVcWsO59hOrVaBFIr7ek`
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=lodging&key=${process.env.HOTEL_APT_KEY}`
     );
     const hotelData = response.data.results.slice(0, 3);
     hotelData.forEach(hotel => {
@@ -40,12 +40,12 @@ export const fetchHotel: RequestHandler = async (req, res) => {
     const hotelDetails = await Promise.all(
       hotelData.map(async (hotel: any) => {
         const placeDetails = await axios.get<PlaceDetailsResponse>(
-          `https://maps.googleapis.com/maps/api/place/details/json?place_id=${hotel.place_id}&fields=name,website,photos&key=AIzaSyAvM90CpjRpKkRCVcWsO59hOrVaBFIr7ek`
+          `https://maps.googleapis.com/maps/api/place/details/json?place_id=${hotel.place_id}&fields=name,website,photos&key=${process.env.HOTEL_API_KEY}`
         );
         const result = placeDetails.data.result;
         //* Sometime phones are unavailable, so added if condition.
         const imgUrl = result.photos
-          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${result.photos[0].photo_reference}&key=AIzaSyAvM90CpjRpKkRCVcWsO59hOrVaBFIr7ek`
+          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${result.photos[0].photo_reference}&key=${process.env.HOTEL_API_KEY}`
           : '';
         return {
           name: result.name,
