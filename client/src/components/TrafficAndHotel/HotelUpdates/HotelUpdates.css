@@ -1,6 +1,7 @@
 .hotel-container {
   background-color: #ffffff;
   padding: 2%;
+  width: 90%;
 }
 
 .inner-wrapper {
@@ -8,10 +9,6 @@
 }
 
 li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  list-style: none;
   padding-bottom: 20px;
 }
 .image-container {
@@ -24,8 +21,6 @@ li {
   max-width: 400px;
 }
 a {
-  text-decoration: none;
-  color: #ffffff;
   letter-spacing: 1px;
 }
 .btn-name-container {
@@ -57,7 +52,6 @@ h5 {
   }
   .image-container {
     flex-direction: column;
-    width: 80%;
   }
 
   .websiteBtn {
