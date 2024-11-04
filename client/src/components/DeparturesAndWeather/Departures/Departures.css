@@ -21,3 +21,96 @@
     max-height: 200px;
     overflow-y: auto;
 }
+.mobail{
+    display: none;
+}
+
+
+  
+
+@media (max-width: 992px) {
+    .mobail {
+        display: block; /* Show mobile table on small screens */
+       padding: 0;
+       margin: 0;
+      }
+    .announcements-table thead {
+      display: none; /* Hide header on small screens */
+    }
+  
+    .announcements-table tr {
+      display: block; /* Make each row a block */
+      margin-bottom: 10px; /* Space between rows */
+    }
+  
+    .announcements-table td {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border: none; /* Remove borders for a cleaner look */
+    }
+  
+    /* Show only the necessary columns in mobile view */
+    .announcements-table tr:first-child td:nth-child(n+4) { 
+      display: none; /* Hide 'Track' and 'Time' columns */
+    }
+  
+    /* Row 2 - show only relevant columns */
+    .announcements-table tr:nth-child(2) td:nth-child(n+3) {
+      display: none; /* Hide 'From' and 'To' */
+    }
+    .hide{
+        visibility: visible;
+    }
+    
+  /* AnnouncementsTable.css */
+
+  .mobile-table {
+    border: 1px solid #dee2e6; /* Same as the Bootstrap table */
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  .mobile-row {
+    display: flex;
+    justify-content: space-between; /* Align items on both sides */
+    margin-bottom: 0.5rem; /* Space between rows */
+  }
+  
+  .mobile-type {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-details {
+    text-align: right; /* Align right for details */
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+  }
+  
+  .mobile-details div {
+    margin-bottom: 0.2rem;
+    
+  }
+  
+  .fromto{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .striped {
+    background-color: #dee2e6;
+
+  }
+
+ 
+
+ 
+  
+    
+  }
