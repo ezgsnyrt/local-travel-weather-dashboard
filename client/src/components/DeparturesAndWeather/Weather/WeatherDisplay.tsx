@@ -45,8 +45,8 @@ interface ApiResponse {
 
 interface WeatherDisplayProps {
   coordinates: {
-    lat: number;
-    lng: number;
+    lat: number | null;
+    lng: number | null;
   };
 }
 
@@ -65,7 +65,7 @@ const getSevenDays = (data: ApiResponse): WeatherData[] => {
 };
 
 axios.defaults.baseURL = 'http://localhost:3005';
-export const fetchWeatherData = async (coordinates: { lat: number; lng: number }) => {
+export const fetchWeatherData = async (coordinates: { lat: number | null; lng: number | null }) => {
 try {
     const response = await axios.get('/weatherforecast',
      { 

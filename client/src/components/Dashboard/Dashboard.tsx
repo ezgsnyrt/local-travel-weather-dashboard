@@ -23,7 +23,7 @@ const Dashboard = () => {
         </Container>
       </Navbar>
       <UserInput setCoordinates={setCoordinates} setLocationName={setLocationName} />
-      <DeparturesAndWeather locationName={locationName}/>
+      <DeparturesAndWeather locationName={locationName} coordinates={coordinates}/>
       <TrafficAndHotel coordinates={coordinates} />
     </>
   );

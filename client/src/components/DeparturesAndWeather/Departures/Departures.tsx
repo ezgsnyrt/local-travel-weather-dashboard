@@ -61,26 +61,29 @@ const Departures = ({ locationName }: DeparturesProps) => {
 
   
   // Fetch trains and ferries when locationName changes
-  useEffect(() => {
-    if (!locationName || announcementsFetched) return; // Do nothing if locationName is null or if announcements have already been fetched
+  // useEffect for fetching announcements when locationName changes
+useEffect(() => {
+  if (!locationName) return; // Do nothing if locationName is null or empty
   
-    const station = stations.find((s) => s.label.toLowerCase() === locationName.toLowerCase());
-    setSelectedStation(station || null);
+  // Clear previous announcements and reset pagination for a new search
+  setAnnouncements([]); // Clear old announcements
+  setCurrentPage(1); // Reset pagination to the first page
+
+  // Find the station by name
+  const station = stations.find((s) => s.label.toLowerCase() === locationName.toLowerCase());
+  setSelectedStation(station || null); // Update selected station
+
+  if (station) {
+    // Fetch trains if it's a valid station
+    searchTrains(station);
+  } else if (cleanedLocationName) {
+    // Fetch ferries if cleanedLocationName is valid
+    searchFerries(cleanedLocationName);
+  }
   
-    // Clear previous announcements when starting a new search
-    setAnnouncements([]); // Clear announcements
-    setCurrentPage(1); // Reset to the first page
-  
-    if (station) {
-      searchTrains(station);
-    } else if (cleanedLocationName) {
-      searchFerries(cleanedLocationName);
-    }
-  
-    // Set the flag to true after fetching announcements
-    setAnnouncementsFetched(true);
-    setLoading(false)
-  }, [cleanedLocationName, locationName, stations, announcementsFetched]);
+  setLoading(false); // Stop loading after setting up fetch
+}, [locationName, stations]); // Remove announcementsFetched dependency
+
   
 
 

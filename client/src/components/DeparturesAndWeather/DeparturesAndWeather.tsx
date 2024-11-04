@@ -7,9 +7,10 @@ import { WeatherDisplay } from './Weather/WeatherDisplay';
 /* Lines in this section should be dynamically created in the related components */
 interface DeparturesAndWeatherProps {
     locationName: string | null;
+    coordinates: {lat: number | null, lng: number | null}
   }
 
-export default function DeparturesAndWeather({locationName}: DeparturesAndWeatherProps) {
+export default function DeparturesAndWeather({locationName, coordinates}: DeparturesAndWeatherProps) {
     const solnaCoordinates = {
         lat: 59.3600,
         lng: 18.0000,
@@ -22,7 +23,7 @@ export default function DeparturesAndWeather({locationName}: DeparturesAndWeathe
             </div>
             <div className="weather-wrapper p-3 mt-5 me-2 mb-5">
             
-            <WeatherDisplay coordinates={solnaCoordinates}/>
+            <WeatherDisplay coordinates={coordinates}/>
             </div>
         </Container>
     )
