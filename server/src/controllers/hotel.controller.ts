@@ -28,13 +28,13 @@ export const fetchHotel: RequestHandler = async (req, res) => {
   const { lat, lng } = req.query;
   try {
     const response = await axios.get<SearchResponse>(
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=lodging&key=${process.env.HOTEL_APT_KEY}`
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=lodging&key=${process.env.HOTEL_API_KEY}`
     );
+
     const hotelData = response.data.results.slice(0, 3);
-    hotelData.forEach(hotel => {
-      console.log(hotel)
-    })
-    console.log("Hotel Data" + JSON.stringify(hotelData, null, 2));
+    hotelData.forEach((hotel) => {
+      console.log(hotel);
+    });
 
     //* Receiving hotels' name, website and image through the response(lat and lng)
     const hotelDetails = await Promise.all(

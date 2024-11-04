@@ -46,8 +46,8 @@ const HotelUpdates: React.FC<HotelUpdatesProps> = ({ coordinates }) => {
         ) : (
           <ul>
             {hotels.map((hotel, index) => (
-              <li key={index}>
-                <div className='image-container'>
+              <li key={index} className='image-container'>
+                <div className='image-container '>
                   {hotel.imgUrl && (
                     <img
                       className='hotelImage'
@@ -61,7 +61,12 @@ const HotelUpdates: React.FC<HotelUpdatesProps> = ({ coordinates }) => {
                       type='button'
                       className='btn btn-success websiteBtn'
                     >
-                      <a href={hotel.website} target='_blank' rel='noreferrer'>
+                      <a
+                        href={hotel.website}
+                        className='text-decoration-none text-light'
+                        target='_blank'
+                        rel='noreferrer'
+                      >
                         Visit Website
                       </a>
                     </button>
