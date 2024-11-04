@@ -21,7 +21,7 @@ app.use(express_1.default.json());
 app.get('/coordinates', address_controller_1.getCoordinates);
 app.get('/autocomplete', address_controller_1.predictAddress);
 app.get('/hotels', hotel_controller_1.fetchHotel);
-app.get("/weatherforecast", weather_controller_1.getWeatherdata);
+app.get('/weatherforecast', weather_controller_1.getWeatherdata);
 app.use(express_1.default.json()); // Ensure body parsing is enabled
 app.post('/api/location-name', async (req, res) => {
     const { lat, lng } = req.body; // Ensure body typing
@@ -31,11 +31,11 @@ app.post('/api/location-name', async (req, res) => {
             res.json({ locationName });
         }
         else {
-            res.status(400).json({ error: "Unable to retrieve location name." });
+            res.status(400).json({ error: 'Unable to retrieve location name.' });
         }
     }
     catch (error) {
-        res.status(500).json({ error: "Server error." });
+        res.status(500).json({ error: 'Server error.' });
     }
 });
 app
