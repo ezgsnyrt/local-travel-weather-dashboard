@@ -1,3 +1,9 @@
+.grid-item {
+  padding: 10px; 
+  text-align: center;
+  border: 1px solid #ddd; 
+  font-size: 1rem; 
+}
 
 .weather-wrapper {
     width: 100%;
@@ -8,15 +14,20 @@
 }
 
 
- @media (min-width: 320px) and (max-width: 576px) { 
+ @media (max-width: 576px) { 
     .weather-wrapper {
         width: 100%;
         margin-left: 3%; 
         padding: 10px;
+       
     }
     .weather-table {
       grid-template-columns: 1fr 1fr; 
   }
+.grid-item{
+  font-size: 1rem;
+  padding: 3px;
+}
 }
 
 @media (min-width: 577px) and (max-width: 769px) {
@@ -54,13 +65,7 @@
     display: contents; 
   }
   
-  .grid-item {
-    padding: 10px; 
-    text-align: center;
-    border: 1px solid #ddd; 
-    font-size: 1rem; 
-  }
-  
+
   .weather-icon img {
     width: 24px; 
     height: auto; 
