@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Weather.css';
 import axios from 'axios';
-
+import sun from '../../../assets/sun.png';
 
 
 
@@ -128,7 +128,7 @@ return (
         <div className="grid-item header">DAY</div>
         <div className="grid-item header">TEMP °C</div>
         <div className="grid-item header">RAIN %</div>
-        <div className="grid-item header">WEATHER</div>
+        <div className="grid-item header"> <img src={sun} alt="Sunny"></img></div>
       </div>
 
       
@@ -138,7 +138,7 @@ return (
         date.setDate(today.getDate() + index);
         const formattedDate = date.toLocaleDateString('en-US', {
           weekday: 'long',
-        });
+        }).slice(0, 3);
       
         const temperature = data.main.temp.toFixed(1);
       const rain = data.main.humidity;// && data.main.humidity?['1h'] ;//? data.main.humidity?['1h'] : 0;
