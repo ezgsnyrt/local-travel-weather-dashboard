@@ -20,7 +20,7 @@ export const fetchTrafficUpdates = async (req: Request, res: Response) => {
     const data = `
    <REQUEST>
   <LOGIN authenticationkey="0d573c6d58e448d0b4a97aaed9204dea"/>
-  <QUERY objecttype="TrafficFlow" namespace="road.trafficinfo" schemaversion="1.5" limit="30">
+  <QUERY objecttype="TrafficFlow" namespace="road.trafficinfo" schemaversion="1.5" limit="15">
     <FILTER>
     <WITHIN name ="Geometry.WGS84" shape="center" value="${lng} ${lat}" radius="20000m" />
     </FILTER>

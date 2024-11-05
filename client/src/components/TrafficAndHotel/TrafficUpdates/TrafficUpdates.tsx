@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./TrafficUpdates.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import axios from "axios";
 
 interface TrafficFlow {
@@ -9,6 +9,13 @@ interface TrafficFlow {
   VehicleFlowRate: number;
   AverageVehicleSpeed: number;
   DataQuality: string;
+  MeasurementOrCalculationPeriod: string;
+  VehicleType: string;
+  CountyNo: number;
+  regionId: number;
+  SpecificLane: string;
+  MeasurementSide: string;
+  ModifiedTime: string;
   Geometry: {
     WGS84: string;
   };
@@ -25,6 +32,14 @@ interface Position {
   position: [number, number];
   details: TrafficFlow;
 }
+
+const RecenterMap = ({ center }: { center: [number, number] }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center);
+  }, [center, map]);
+  return null;
+};
 
 const TrafficUpdates: React.FC<TrafficUpdatesProps> = ({ coordinates }) => {
   const [positions, setPositions] = useState<Position[]>([]);
@@ -63,10 +78,10 @@ const TrafficUpdates: React.FC<TrafficUpdatesProps> = ({ coordinates }) => {
       }
     };
     fetchData();
-  }, [coordinates]);
+  }, [coordinates?.lat, coordinates?.lng]);
 
   return (
-    <div className="traffic-container">
+    <div style={{ background: "white" }} className="traffic-container">
       <h4 className="mt-2">TRAFFIC UPDATES</h4>
 
       {!positions?.length ? (
@@ -74,41 +89,51 @@ const TrafficUpdates: React.FC<TrafficUpdatesProps> = ({ coordinates }) => {
       ) : (
         <MapContainer
           style={{ height: "50vh", width: "100%" }}
-          center={positions[0].position}
+          center={coordinates ? [coordinates.lat, coordinates.lng] : [0, 0]}
           zoom={12}
           maxZoom={30}
         >
+          <RecenterMap
+            center={coordinates ? [coordinates.lat, coordinates.lng] : [0, 0]}
+          />
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
 
-          {positions.map((pos, index) => (
-            <Marker key={index} position={pos.position}>
-              <Popup>
-                <div>
-                  <p>
-                    <strong>Site ID:</strong> {pos.details.SiteId}
-                  </p>
-                  <p>
-                    <strong>Measurement Time:</strong>{" "}
-                    {pos.details.MeasurementTime}
-                  </p>
-                  <p>
-                    <strong>Vehicle Flow Rate:</strong>{" "}
-                    {pos.details.VehicleFlowRate}
-                  </p>
-                  <p>
-                    <strong>Average Speed:</strong>{" "}
-                    {pos.details.AverageVehicleSpeed} km/h
-                  </p>
-                  <p>
-                    <strong>Data Quality:</strong> {pos.details.DataQuality}
-                  </p>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+          {positions
+            .slice()
+            .sort(() => Math.random() - 0.5)
+            .map((pos) => (
+              <Marker
+                key={pos.details.regionId || Math.random()}
+                position={pos.position}
+              >
+                <Popup>
+                  <div>
+                    <p>
+                      <strong>Site ID:</strong> {pos.details.SiteId}
+                    </p>
+                    <p>
+                      <strong>Data Quality:</strong>
+                      {pos.details.DataQuality}
+                    </p>
+                    <p>
+                      <strong>Vehicle Flow Rate:</strong>{" "}
+                      {pos.details.VehicleFlowRate}
+                    </p>
+                    <p>
+                      <strong>Average Speed:</strong>{" "}
+                      {pos.details.AverageVehicleSpeed} km/h
+                    </p>
+                    <p>
+                      <strong>Data Quality:</strong>
+                      {pos.details.DataQuality}
+                    </p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
         </MapContainer>
       )}
     </div>
