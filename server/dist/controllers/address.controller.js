@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.predictAddress = exports.getCoordinates = void 0;
 const axios_1 = __importDefault(require("axios"));
+console.log("API Key: ", process.env.API_KEY);
 async function getCoordsForAddress(address) {
     const response = await axios_1.default.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.API_KEY}`);
     const data = response.data;

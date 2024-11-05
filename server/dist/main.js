@@ -10,10 +10,11 @@ const address_controller_1 = require("./controllers/address.controller");
 const hotel_controller_1 = require("./controllers/hotel.controller");
 const departure_controller_1 = require("./controllers/departure.controller");
 const weather_controller_1 = require("./controllers/weather.controller");
+const traffic_controller_1 = require("./controllers/traffic.controller");
 const PORT = 3005;
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: ['http://localhost:3000'], // Front-end local host
+    origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'], // Front-end local host
 };
 app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
@@ -22,6 +23,7 @@ app.get('/coordinates', address_controller_1.getCoordinates);
 app.get('/autocomplete', address_controller_1.predictAddress);
 app.get('/hotels', hotel_controller_1.fetchHotel);
 app.get('/weatherforecast', weather_controller_1.getWeatherdata);
+app.post("/traffic-updates", traffic_controller_1.fetchTrafficUpdates);
 app.use(express_1.default.json()); // Ensure body parsing is enabled
 app.post('/api/location-name', async (req, res) => {
     const { lat, lng } = req.body; // Ensure body typing
