@@ -8,6 +8,7 @@ import {
 import { fetchHotel } from './controllers/hotel.controller';
 import { getLocationName } from './controllers/departure.controller';
 import { getWeatherdata } from './controllers/weather.controller';
+import { fetchTrafficUpdates } from './controllers/traffic.controller';
 
 const PORT = 3005;
 const app = express();
@@ -23,6 +24,7 @@ app.get('/coordinates', getCoordinates);
 app.get('/autocomplete', predictAddress);
 app.get('/hotels', fetchHotel);
 app.get('/weatherforecast', getWeatherdata);
+app.post("/traffic-updates", fetchTrafficUpdates);
 
 app.use(express.json()); // Ensure body parsing is enabled
 
