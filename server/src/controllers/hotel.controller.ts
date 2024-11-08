@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import axios from 'axios';
-
+console.log('API Key: ', process.env.HOTEL_API_KEY);
 interface PlacePhoto {
   photo_reference: string;
 }

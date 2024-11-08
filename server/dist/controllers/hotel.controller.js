@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchHotel = void 0;
 const axios_1 = __importDefault(require("axios"));
+console.log('API Key: ', process.env.HOTEL_API_KEY);
 const fetchHotel = async (req, res) => {
     //* Receiving lat and lng by depending users address.
     const { lat, lng } = req.query;

@@ -13,7 +13,11 @@ import { fetchTrafficUpdates } from './controllers/traffic.controller';
 const PORT = 3005;
 const app = express();
 const corsOptions = {
-  origin: ['http://localhost:3000','http://localhost:3001','http://localhost:3002'], // Front-end local host
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+  ], // Front-end local host
 };
 
 app.use(cors(corsOptions));
@@ -24,7 +28,7 @@ app.get('/coordinates', getCoordinates);
 app.get('/autocomplete', predictAddress);
 app.get('/hotels', fetchHotel);
 app.get('/weatherforecast', getWeatherdata);
-app.post("/traffic-updates", fetchTrafficUpdates);
+app.post('/traffic-updates', fetchTrafficUpdates);
 
 app.use(express.json()); // Ensure body parsing is enabled
 
